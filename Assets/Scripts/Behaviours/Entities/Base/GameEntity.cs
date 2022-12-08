@@ -18,11 +18,9 @@ public class GameEntity : MonoBehaviour
     public Data data { get; private set; }
     protected Seed world { get; private set; }
     protected Dictionary<string, GameLabel> labels {get; private set;}
-    public GameObject gameObject { get; private set; }
     public Transform baseObject { get; private set; }
     public Transform baseModel { get; private set; }
     protected int ID { get; private set; }
-    protected string name { get; private set; } = "?";
     public string lastActive { get; private set; } = null;
     public bool isCore {get; private set;} = false;
     public bool isActive { get; private set; } = false;

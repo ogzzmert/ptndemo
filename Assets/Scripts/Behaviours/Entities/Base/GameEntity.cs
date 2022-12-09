@@ -25,8 +25,6 @@ public class GameEntity : MonoBehaviour
     public bool isCore {get; private set;} = false;
     public bool isActive { get; private set; } = false;
     public bool isBuilt { get; private set; } = false;
-
-
     public class Position
     {
         public int x;
@@ -36,8 +34,8 @@ public class GameEntity : MonoBehaviour
 
     public class Move
     {
-        public Position p;  // position
-        public int s;       // speed
+        public Position[] p;  // position array
+        float speed;
     }
 
     public enum type

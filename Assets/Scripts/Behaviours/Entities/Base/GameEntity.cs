@@ -16,7 +16,7 @@ public class GameEntity : MonoBehaviour
 
     }
     public Data data { get; private set; }
-    protected Seed world { get; private set; }
+    protected World world { get; private set; }
     protected Dictionary<string, GameLabel> labels {get; private set;}
     public Transform baseObject { get; private set; }
     public Transform baseModel { get; private set; }
@@ -54,7 +54,7 @@ public class GameEntity : MonoBehaviour
 
     }
 
-    public GameEntity(Seed world, Data data)
+    public GameEntity(World world, Data data)
     {
         this.world = world;
         this.data = data;

@@ -6,7 +6,7 @@ public class GameInputfield : GameBar
 {
     InputField field;
 
-    public GameInputfield(Seed world, Transform transform) : base (world, transform)
+    public GameInputfield(World world, Transform transform) : base (world, transform)
     {
         this.image.raycastTarget = true;
         field = transform.gameObject.AddComponent<InputField>();

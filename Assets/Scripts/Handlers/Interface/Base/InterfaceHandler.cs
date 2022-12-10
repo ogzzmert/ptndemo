@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InterfaceHandler : MonoBehaviour
 {
+    [field: SerializeField] private Canvas canvas;
+
     // Start is called before the first frame update
     void Start()
     {

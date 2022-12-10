@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 public class GameInteractable
 {
-    protected Seed world;
+    protected World world;
     protected RectTransform transform;
     protected Image image {get; private set;}
     protected Color color;
     protected float size;
 
-    public GameInteractable(Seed world, Transform transform)
+    public GameInteractable(World world, Transform transform)
     {
         this.world = world;
         this.image = transform.gameObject.AddComponent<Image>();

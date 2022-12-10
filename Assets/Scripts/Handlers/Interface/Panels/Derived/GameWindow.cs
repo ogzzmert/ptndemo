@@ -28,7 +28,7 @@ public class GameWindow : GameInteractable
         public bool responsive;
         public WindowData(Data data, bool compress = true, bool responsive = false) { this.data = data; this.compress = compress; this.responsive = responsive; buildWindowData(this); }
     }
-    public GameWindow(Seed world, Transform transform) : base (world, transform)
+    public GameWindow(World world, Transform transform) : base (world, transform)
     {
         this.image.raycastTarget = false;
         dict = new Dictionary<string, GameInteractable>();

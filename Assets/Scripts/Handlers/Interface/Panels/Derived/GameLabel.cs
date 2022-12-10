@@ -11,7 +11,7 @@ public class GameLabel : GameBar
     int distance = 1000;
     float multiplier = 0.05f;
 
-    public GameLabel(Seed world, Transform transform) : base (world, transform)
+    public GameLabel(World world, Transform transform) : base (world, transform)
     {
         setButton();
         this.image.enabled = false;
@@ -35,7 +35,7 @@ public class GameLabel : GameBar
     }
     protected class LabelButton : Button, IPointerDownHandler, IPointerUpHandler
     {
-        Seed world;
+        World world;
         GameLabel label;
         float distance;
         int opacity;
@@ -50,7 +50,7 @@ public class GameLabel : GameBar
         Transform target, baseObject;
         RectTransform rect;
 
-        public void initialize(Seed world, GameLabel label)
+        public void initialize(World world, GameLabel label)
         {
             this.world = world;
             this.label = label;

@@ -7,7 +7,7 @@ public class GameButton : GameBar
 {
     Button button;
 
-    public GameButton(Seed world, Transform transform) : base (world, transform)
+    public GameButton(World world, Transform transform) : base (world, transform)
     {
         this.image.raycastTarget = true;
         setButton();

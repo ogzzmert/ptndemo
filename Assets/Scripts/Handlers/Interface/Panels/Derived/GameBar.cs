@@ -15,7 +15,7 @@ public class GameBar : GameInteractable
 
     }
 
-    public GameBar(Seed world, Transform transform) : base (world, transform)
+    public GameBar(World world, Transform transform) : base (world, transform)
     {
         setOpacity(255);
         this.image.raycastTarget = false;

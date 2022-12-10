@@ -26,13 +26,13 @@ public class Panel : MonoBehaviour
         button
     }
     protected Dictionary<type, Dictionary<string, GameInteractable>> items { get; private set; } = new Dictionary<type, Dictionary<string, GameInteractable>>();
-    protected Seed world;
+    protected World world;
     protected RectTransform rect;
     protected int value;
     protected bool onLaunch = false;
     public bool isActive { get; private set; }= false;
 
-    public void setWorld(Seed world, int value = 0)
+    public void setWorld(World world, int value = 0)
     {
         this.world = world;
         this.value = value;

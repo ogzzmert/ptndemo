@@ -7,7 +7,7 @@ public class GameHoldButton : GameButton
 {
     HoldButton button;
 
-    public GameHoldButton(Seed world, Transform transform) : base (world, transform)
+    public GameHoldButton(World world, Transform transform) : base (world, transform)
     {
 
     }

@@ -15,7 +15,7 @@ public class Calculator
     {
         return getDistance(one.x, one.z, another.x, another.z);
     }
-    public static float getDistance(GameEntity.Position one, GameEntity.Position another)
+    public static float getDistance(Entity.Position one, Entity.Position another)
     {
         return getDistance(one.x, one.z, another.x, another.z);
     }

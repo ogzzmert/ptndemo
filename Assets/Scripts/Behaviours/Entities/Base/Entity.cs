@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameEntity : MonoBehaviour
+public class Entity : MonoBehaviour
 {
     public class Data
     {
@@ -54,7 +54,7 @@ public class GameEntity : MonoBehaviour
 
     }
 
-    public GameEntity(World world, Data data)
+    public Entity(World world, Data data)
     {
         this.world = world;
         this.data = data;
@@ -157,7 +157,7 @@ public class GameEntity : MonoBehaviour
     {
         isBuilt = condition;
     }
-    protected virtual void setPosition(GameEntity.Position position)
+    protected virtual void setPosition(Entity.Position position)
     {
         this.data.position = position;
         baseObject.position = new Vector3(position.x * 0.1f, baseObject.position.y, position.z * -0.1f);

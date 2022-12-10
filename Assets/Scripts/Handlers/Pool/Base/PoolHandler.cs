@@ -10,9 +10,9 @@ public class PoolHandler : MonoBehaviour
     Transform parent;
     World world;
 
-    public void initialize(World w)
+    public void initialize(World world)
     {
-        world = w;
+        this.world = world;
         parent = this.transform;
         pool_list = new List<Pool>();
         size = size > 0 ? size : 64;

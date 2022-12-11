@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour
     {
         public int index;
         public string code;
-        public type type;
+        public EntityType type;
         public string info;
         public Position position;
 
@@ -36,22 +36,6 @@ public class Entity : MonoBehaviour
     {
         public Position[] p;  // position array
         float speed;
-    }
-
-    public enum type
-    {
-        None = 0,
-        Player = 1,
-        Pet = 2,
-        Npc = 3,
-        Monster = 4,
-        Mechanic = 5,
-        Object = 6,
-        Stuff = 7,
-        Property = 8,
-        File = 9,
-        Target = 10
-
     }
 
     public Entity(World world, Data data)

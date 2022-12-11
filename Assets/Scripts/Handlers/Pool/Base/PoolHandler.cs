@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public class PoolHandler : MonoBehaviour
+public class PoolHandler : Handler
 {
     [field: SerializeField]
     public int size { get; private set; }
 
     List<Pool> pool_list;
     Transform parent;
-    World world;
 
-    public void initialize(World world)
+    protected override void initialize()
     {
-        this.world = world;
         parent = this.transform;
         pool_list = new List<Pool>();
         size = size > 0 ? size : 64;
+    }
+    protected override HandlerType GetHandlerType()
+    {
+        return HandlerType.Pool;
     }
     public Pool generate(GameObject baseObject, int count = -1)
     {

@@ -1,26 +1,55 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InterfaceHandler : MonoBehaviour
+public class InterfaceHandler : Handler
 {
     [field: SerializeField] private Canvas canvas;
+    [field: SerializeField] private GameInterface[] panelList;
 
-    World world;
+    [Serializable]
+    private class GameInterface
+    {
+        public WorldType type;
+        public GameObject panel;
+    } 
 
-    // Start is called before the first frame update
-    public void initialize(World world)
+    Dictionary<WorldType, GameObject> panels = new Dictionary<WorldType, GameObject>();
+    Panel panel;
+
+    protected override void initialize()
     {
-        this.world = world;
+        foreach(GameInterface gi in panelList) panels.Add(gi.type, gi.panel);
     }
-    void Start()
+    protected override HandlerType GetHandlerType()
     {
-        
+        return HandlerType.Gui;
+    }
+    public void generate(WorldType worldType, int worldIndex)
+    {
+        if (panel != null)
+        {
+            panel.discard();
+
+            world.destroy(panel.gameObject);
+
+            panel = null;
+
+        }
+
+        if (panels.ContainsKey(worldType))
+        {
+
+            panel = world.spawn(panels[worldType]).GetComponent<Panel>();
+            
+            panel.gameObject.transform.SetParent(this.canvas.gameObject.transform);
+            panel.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+            panel.gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+            panel.initialize(world, worldIndex);
+
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

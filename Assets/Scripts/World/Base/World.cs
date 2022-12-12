@@ -5,13 +5,11 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour 
 {
-    [field: SerializeField] private Handler[] handlerList;
-
     Dictionary<Type, Handler> handlers = new Dictionary<Type, Handler>();
 
     private void Awake() 
     {
-        foreach(Handler handler in handlerList)
+        foreach(Handler handler in GetComponentsInChildren<Handler>())
         {
             handler.initialize(this);
             handlers.Add(handler.GetType(), handler);

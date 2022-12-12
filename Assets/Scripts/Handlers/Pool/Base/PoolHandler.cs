@@ -15,10 +15,6 @@ public class PoolHandler : Handler
         pool_list = new List<Pool>();
         size = size > 0 ? size : 64;
     }
-    protected override HandlerType GetHandlerType()
-    {
-        return HandlerType.Pool;
-    }
     public Pool generate(GameObject baseObject, int count = -1)
     {
         if (count < 1) count = size; 

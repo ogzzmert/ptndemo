@@ -31,8 +31,7 @@ public class World : MonoBehaviour
     }
     private IEnumerator loadWorld(WorldType worldType, int worldIndex)
     {
-        handle<InterfaceHandler>().generate(worldType, worldIndex);
-        handle<MapHandler>().generate(worldType, worldIndex);
+        foreach(Handler handler in handlers.Values) if (handler is IHandlerGenerator) (handler as IHandlerGenerator).generate(worldType, worldIndex);
         yield return null; // load resources and wait for them to be loaded/instantiated
     }
     public bool isReady() { return true; }

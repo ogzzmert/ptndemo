@@ -6,16 +6,11 @@ using UnityEngine.Events;
 
 public class GameEventHandler : Handler
 {
-    [field: SerializeField] private GameEvent[] eventList;
     Dictionary<GameEventType, UnityEvent> events = new Dictionary<GameEventType, UnityEvent>();
 
     protected override void initialize()
     {
-        foreach(GameEvent e in eventList) events.Add(e.type, e.action);
-    }
-    protected override HandlerType GetHandlerType()
-    {
-        return HandlerType.Event;
+        foreach(GameEvent e in GetComponentsInChildren<GameEvent>()) events.Add(e.type, e.action);
     }
     public void call(GameEventType eventType)
     {

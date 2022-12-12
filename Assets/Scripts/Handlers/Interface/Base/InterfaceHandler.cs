@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InterfaceHandler : Handler
+public class InterfaceHandler : Handler, IHandlerGenerator
 {
     [field: SerializeField] private Canvas canvas;
     [field: SerializeField] private GameInterface[] panelList;
@@ -21,10 +21,6 @@ public class InterfaceHandler : Handler
     protected override void initialize()
     {
         foreach(GameInterface gi in panelList) panels.Add(gi.type, gi.panel);
-    }
-    protected override HandlerType GetHandlerType()
-    {
-        return HandlerType.Gui;
     }
     public void generate(WorldType worldType, int worldIndex)
     {

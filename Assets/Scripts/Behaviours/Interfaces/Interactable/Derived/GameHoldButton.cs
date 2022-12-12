@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-public class GameHoldButton : GameButton
+public class GameHoldButton : GameButton, IGameHoldable
 {
     HoldButton button;
 
@@ -17,7 +17,7 @@ public class GameHoldButton : GameButton
         this.button.transition = Selectable.Transition.None;
     }
 
-    public override void onClick(UnityAction action)
+    public new void onClick(UnityAction action)
     {
         button.setAction(action);
     }

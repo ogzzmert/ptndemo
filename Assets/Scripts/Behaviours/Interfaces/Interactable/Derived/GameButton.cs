@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-public class GameButton : GameBar
+public class GameButton : GameBar, IGameClickable
 {
     Button button;
 
@@ -24,7 +24,7 @@ public class GameButton : GameBar
         onClick(action);
     }
 
-    public virtual void onClick(UnityAction action)
+    public void onClick(UnityAction action)
     {
         button.onClick.RemoveAllListeners();
 

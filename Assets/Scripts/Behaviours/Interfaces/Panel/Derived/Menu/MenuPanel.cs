@@ -13,11 +13,13 @@ public class MenuPanel : Panel
 
     public void startGame()
     {
+        world.handle<AudioHandler>().playSoundButtonA();
         Debug.Log("start");
     }
 
     public void showCredits()
     {
+        world.handle<AudioHandler>().playSoundButtonB();
         Debug.Log("credits");
     }
 }

@@ -6,9 +6,9 @@ using UnityEngine;
 public class ResourceManager
 {
     private ResourceManager() { }
-    private static Dictionary<string, MonoBehaviour> cache = new Dictionary<string, MonoBehaviour>();
+    private static Dictionary<string, UnityEngine.Object> cache = new Dictionary<string, UnityEngine.Object>();
 
-    public static bool save<T>(string name, string path) where T : MonoBehaviour
+    public static bool save<T>(string name, string path) where T : UnityEngine.Object
     {
         switch(cache.ContainsKey(name))
         {
@@ -20,11 +20,11 @@ public class ResourceManager
                 return false;
         }
     }
-    public static T load<T>(string path) where T : MonoBehaviour
+    public static T load<T>(string path) where T : UnityEngine.Object
     {
         return Resources.Load<T>(path);
     }
-    public static T loadFromCache<T>(string name) where T : MonoBehaviour
+    public static T loadFromCache<T>(string name) where T : UnityEngine.Object
     {
         return cache.ContainsKey(name) ? cache[name] as T : null;
     }

@@ -28,7 +28,7 @@ public class GameLabel : GameBar
         this.button.setBaseObject(baseObject);
         onClick(action);
     }
-    public virtual void onClick(UnityAction action)
+    public void onClick(UnityAction action)
     {
         this.image.raycastTarget = action != null;
         button.setAction(action);

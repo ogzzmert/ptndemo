@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class GameBar : GameInteractable
 {
     protected type barType;
-    protected string text;
+    protected Text textComponent;
 
     public enum type
     {
@@ -24,37 +24,16 @@ public class GameBar : GameInteractable
     {
         build(barType, text, size, true);
     }
-    public void initialize(Sprite sprite, float size = 1.5f)
-    {
-        this.size = size;
-        this.barType = type.bar;
-
-        this.image.sprite = sprite;
-        image.rectTransform.sizeDelta = new Vector2(this.image.sprite.texture.width * this.size, this.image.sprite.texture.height * this.size);
-    }
     protected virtual void build(type barType, string text, float size, bool apply)
     {
         this.barType = barType;
         this.size = size;
-        setText(text, apply);
+        this.textComponent = this.transform.gameObject.GetComponentInChildren<Text>();
+        setText(text);
     }
-    public void setText(string newText, bool apply = true)
+    public void setText(string newText)
     {
-        this.text = newText;
-        /*
-        TextureManager.setFramedImage(
-            image, 
-            this.text, 
-            GameBar.frames[this.barType], 
-            GameBar.fonts[this.barType], 
-            true, 
-            this.size, 
-            TextureManager.basicColor,
-            "",
-            "",
-            apply
-        );
-        */
+        this.textComponent.text = newText;
     }
     public void changeType(Image.Type _type)
     {

@@ -15,6 +15,7 @@ public class InterfaceHandler : Handler, IHandlerGenerator
     } 
 
     Dictionary<WorldType, GameObject> panels = new Dictionary<WorldType, GameObject>();
+    Dictionary<SubPanelType, GameObject> subpanels = new Dictionary<SubPanelType, GameObject>();
     Panel panel;
 
     protected override void initialize()
@@ -28,7 +29,16 @@ public class InterfaceHandler : Handler, IHandlerGenerator
                 panels.Add(wt, p);
 
             }
-            else break;
+        }
+        foreach(SubPanelType spt in Enum.GetValues(typeof(SubPanelType)))
+        {
+            string pname = spt.ToString();
+            GameObject p = ResourceManager.load<GameObject>("Prefab/UI/Subpanel/" + pname);
+            if (p != null)
+            {
+                subpanels.Add(spt, p);
+
+            }
         }
         
     }
@@ -62,5 +72,20 @@ public class InterfaceHandler : Handler, IHandlerGenerator
         world.destroy(panel.gameObject);
         panel = null;
     }
+    public T spawnSubPanel<T, V>(SubPanelType subpanel) where T : SubPanel where V : Panel
+    {
+        if (subpanels.ContainsKey(subpanel))
+        {
+            GameObject obj = world.spawn(subpanels[subpanel]);
+            obj.gameObject.transform.SetParent(panel.transform);
+            obj.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+            obj.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            
+            T sp = obj.GetComponent<T>();
+            sp.initialize<V>(world, panel as V);
 
+            return obj.GetComponent<T>();
+        }
+        else return null;
+    }
 }

@@ -65,6 +65,7 @@ public class Panel : MonoBehaviour
     public virtual void discard()
     {
         // clear gui stuff before loading override, trigger onExit for specific panel class if desired
+        world.destroy(this.gameObject);
     }
     public virtual void reload()
     {
@@ -80,9 +81,6 @@ public class Panel : MonoBehaviour
         // json data = something as json;
     }
     protected void endLaunch() { onLaunch = false; }
-    protected GameWindow getWindow(string itemName) { return interactables[type.window][itemName] as GameWindow; }
-    protected GameBar getBar(string itemName) { return interactables[type.bar][itemName] as GameBar; }
-    protected GameButton getButton(string itemName) { return interactables[type.button][itemName] as GameButton; }
     public Transform getOther(string itemName) 
     {  
         return oth.FirstOrDefault(c => c.name == itemName).item;

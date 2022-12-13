@@ -6,7 +6,6 @@ using System;
 public class GameWindow : GameInteractable
 {
     public WindowData currentWindow {get; private set;}
-    Dictionary<string, GameInteractable> dict;
     
     [Serializable]
     public class Data
@@ -32,7 +31,6 @@ public class GameWindow : GameInteractable
     public GameWindow(World world, Transform transform, UnityEvent action) : base (world, transform, action)
     {
         this.image.raycastTarget = false;
-        dict = new Dictionary<string, GameInteractable>();
     }
     public void initialize(WindowData windowData)
     {
@@ -46,40 +44,6 @@ public class GameWindow : GameInteractable
     public void refresh()
     {
         currentWindow.texture.Apply();
-    }
-    public T addInteractable<T>(string key) where T : GameInteractable
-    {
-        T item = (T)Activator.CreateInstance(typeof(T), new object[] { this.world, new GameObject(key).AddComponent<RectTransform>() });
-        item.setParent(this);
-
-        if(!dict.ContainsKey(key))
-        {
-            dict.Add(key, item);
-            return item;
-        }
-        else return null;
-    }
-    public T getInteractable<T>(string key) where T : GameInteractable
-    {
-        if (dict.ContainsKey(key))
-        {
-            return dict[key] as T;
-        }
-        else return null;
-    }
-    public void removeInteractable(string key)
-    {
-        if (dict.ContainsKey(key))
-        {
-            GameInteractable i = dict[key] as GameInteractable;
-            dict.Remove(key);
-            i.discard();
-        }
-    }
-    public void Clear()
-    {
-        foreach(GameInteractable i in dict.Values) i.discard();
-        dict.Clear();
     }
     public static void buildWindowData(WindowData wd)
     {

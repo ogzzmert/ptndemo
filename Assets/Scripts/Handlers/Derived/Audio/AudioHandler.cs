@@ -24,7 +24,7 @@ public class AudioHandler : Handler, IHandlerGenerator
 
             while(true)
             {
-                string clipname = wt.ToString() + "_" + i.ToString();
+                string clipname = getClipName(wt, i);
                 AudioClip clip = ResourceManager.load<AudioClip>("Audio/Music/" + clipname);
                 if (clip != null)
                 {
@@ -50,8 +50,13 @@ public class AudioHandler : Handler, IHandlerGenerator
     }
     public void generate(WorldType worldType, int worldIndex)
     {
-        playMusic(worldType.ToString() + "_" + worldIndex.ToString());
+        playMusic(getClipName(worldType, worldIndex));
     }
+    public void degenerate()
+    {
+        musicSource.Stop();
+    }
+    private string getClipName(WorldType worldType, int worldIndex) { return worldType.ToString() + "/" + worldIndex.ToString(); }
     public void changeMusicVolume(float volume)
     {
         volume = volume > 1f || volume < 0f ? 1f : volume;

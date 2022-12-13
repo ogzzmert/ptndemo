@@ -12,7 +12,7 @@ public class SubPanel : Panel
         
         initialize(world);
     }
-    protected virtual T getParentPanel<T>() where T : Panel
+    protected T getParentPanel<T>() where T : Panel
     {
         return parentPanel as T;
     }

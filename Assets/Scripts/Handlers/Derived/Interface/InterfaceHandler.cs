@@ -6,7 +6,6 @@ using UnityEngine;
 public class InterfaceHandler : Handler, IHandlerGenerator
 {
     [field: SerializeField] private Canvas canvas;
-    [field: SerializeField] private GameInterface[] panelList;
 
     [Serializable]
     private class GameInterface
@@ -20,7 +19,18 @@ public class InterfaceHandler : Handler, IHandlerGenerator
 
     protected override void initialize()
     {
-        foreach(GameInterface gi in panelList) panels.Add(gi.type, gi.panel);
+        foreach(WorldType wt in Enum.GetValues(typeof(WorldType)))
+        {
+            string pname = wt.ToString();
+            GameObject p = ResourceManager.load<GameObject>("Prefab/UI/Panel/" + pname);
+            if (p != null)
+            {
+                panels.Add(wt, p);
+
+            }
+            else break;
+        }
+        
     }
     public void generate(WorldType worldType, int worldIndex)
     {
@@ -46,6 +56,11 @@ public class InterfaceHandler : Handler, IHandlerGenerator
             panel.initialize(world, worldIndex);
 
         }
+    }
+    public void degenerate()
+    {
+        world.destroy(panel.gameObject);
+        panel = null;
     }
 
 }

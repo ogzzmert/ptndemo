@@ -78,6 +78,11 @@ public class GameInteractable
         this.transform.SetParent(i.transform);
         this.transform.localScale = new Vector2(1, 1);
     }
+    public void setParent(Panel i)
+    {
+        this.transform.SetParent(i.transform);
+        this.transform.localScale = new Vector2(1, 1);
+    }
     public Vector2 getPosition(bool isLocal = false) 
     { 
         if (isLocal) return this.transform.localPosition;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class SubPanel : Panel
 {
-    private Panel parentPanel;
+    [field : SerializeField] private Panel parentPanel;
     protected override void launch()
     {
         onLaunch = false;

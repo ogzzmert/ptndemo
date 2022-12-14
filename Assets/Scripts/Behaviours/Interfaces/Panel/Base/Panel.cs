@@ -31,6 +31,7 @@ public class Panel : MonoBehaviour
 
     protected World world;
     protected RectTransform rect;
+    protected PoolObject pooledObject;
     protected int value;
     protected bool onLaunch = false;
     public bool isActive { get; private set; }= false;
@@ -47,6 +48,7 @@ public class Panel : MonoBehaviour
     }
     void setInteractables()
     {
+        interactables.Clear();
         foreach (type item in Enum.GetValues(typeof(type)))
         {
             interactables.Add(item, new Dictionary<string, GameInteractable>());
@@ -62,10 +64,14 @@ public class Panel : MonoBehaviour
             onLaunch = true;
         }
     }
+    public void setAsPooled(PoolObject pooledObject)
+    {
+        this.pooledObject = pooledObject;
+    }
     public virtual void discard()
     {
         // clear gui stuff before loading override, trigger onExit for specific panel class if desired
-        world.destroy(this.gameObject);
+        if(pooledObject != null && pooledObject.isAwake()) pooledObject.sendback();
     }
     public virtual void reload()
     {
@@ -81,6 +87,7 @@ public class Panel : MonoBehaviour
         // json data = something as json;
     }
     protected void endLaunch() { onLaunch = false; }
+    public PoolObject getPooledObject() { return pooledObject; }
     public Transform getOther(string itemName) 
     {  
         return oth.FirstOrDefault(c => c.name == itemName).item;

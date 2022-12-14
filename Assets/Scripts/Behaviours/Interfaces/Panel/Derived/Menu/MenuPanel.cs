@@ -30,10 +30,15 @@ public class MenuPanel : Panel
     {
         world.handle<AudioHandler>().playSoundButtonB();
 
-        if (credits == null)
+        if (credits == null || !credits.getPooledObject().isAwake())
         {
-            credits = world.handle<InterfaceHandler>().spawnSubPanel<SubPanel, MenuPanel>(SubPanelType.Message);
-            credits.getInteractable<GameBar>(Panel.type.bar, "box").initialize("TextManager");
+            credits = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, MenuPanel>(SubPanelType.Message);
+
+            credits.getInteractable<GameBar>(Panel.type.bar, "box")
+                .initialize
+                (
+                    TextManager.bring(TextManager.Content.Credits)
+                );
         }
     }
 }

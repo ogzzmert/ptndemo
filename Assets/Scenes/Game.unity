@@ -1306,8 +1306,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 150272924}
-  panelList:
-  - type: 0
-    panel: {fileID: 6441954815907851672, guid: 6f1608fad34407c1c9f0808528208091, type: 3}
-  - type: 1
-    panel: {fileID: 6397255945245017311, guid: e9209dffdf812d451849f21ca9bb5a49, type: 3}

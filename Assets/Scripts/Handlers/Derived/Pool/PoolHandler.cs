@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public class PoolHandler : Handler
+public class PoolHandler : Handler, IHandlerGenerator
 {
     [field: SerializeField]
     public int size { get; private set; }
@@ -15,7 +15,7 @@ public class PoolHandler : Handler
         pool_list = new List<Pool>();
         size = size > 0 ? size : 64;
     }
-    public Pool generate(GameObject baseObject, int count = -1)
+    public Pool poolify(GameObject baseObject, int count = -1)
     {
         if (count < 1) count = size; 
         Pool result = new Pool(world, baseObject, count, parent);
@@ -28,5 +28,15 @@ public class PoolHandler : Handler
         {
             pool.reset();
         }
+    }
+
+    public void generate(WorldType worldType, int worldIndex)
+    {
+        
+    }
+
+    public void degenerate()
+    {
+        cleanse();
     }
 }

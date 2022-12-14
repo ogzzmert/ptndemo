@@ -29,7 +29,8 @@ public class PoolObject
     public int getIndex() { return i; }
     public void sendback()
     {
-        sleep();
+        awake = false; 
+        g.SetActive(false);
+        g.transform.SetParent(h);
     }
-    public void sleep() { awake = false; g.SetActive(false); }
 }

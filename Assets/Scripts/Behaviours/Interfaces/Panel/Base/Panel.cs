@@ -16,7 +16,6 @@ public class Panel : MonoBehaviour
         public Transform item;
         public UnityEvent action;
     }
-    public Data[] wndw;
     public Data[] btn;
     public Data[] bar;
     public Data[] oth;
@@ -53,7 +52,6 @@ public class Panel : MonoBehaviour
         {
             interactables.Add(item, new Dictionary<string, GameInteractable>());
         }
-        foreach(Data data in wndw) { interactables[type.window].Add(data.name, new GameWindow(world, data.item, data.action)); }
         foreach(Data data in bar) { interactables[type.bar].Add(data.name, new GameBar(world, data.item, data.action)); }
         foreach(Data data in btn) { interactables[type.button].Add(data.name, new GameButton(world, data.item, data.action)); }
     }

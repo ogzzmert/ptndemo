@@ -9,7 +9,7 @@ public class MapHandler : Handler, IHandlerGenerator
     [field: SerializeField] private Grid grid;
 
     Dictionary<string, GameObject> maps = new Dictionary<string, GameObject>();
-    Tilemap basemap, midmap, topmap;
+    Tilemap basemap;
 
     protected override void initialize()
     {
@@ -42,11 +42,7 @@ public class MapHandler : Handler, IHandlerGenerator
     public void degenerate()
     {
         if (basemap != null) world.destroy(basemap.gameObject);
-        if (midmap != null) world.destroy(midmap.gameObject);
-        if (topmap != null) world.destroy(topmap.gameObject);
         basemap = null;
-        midmap = null;
-        topmap = null;
     }
     private void loadBaseMap(string mapname)
     {

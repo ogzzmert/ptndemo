@@ -16,6 +16,7 @@ public class InterfaceHandler : Handler, IHandlerGenerator
 
     Dictionary<WorldType, Pool> panels = new Dictionary<WorldType, Pool>();
     Dictionary<SubPanelType, Pool> subpanels = new Dictionary<SubPanelType, Pool>();
+
     Panel panel;
 
     protected override void initialize()
@@ -37,12 +38,13 @@ public class InterfaceHandler : Handler, IHandlerGenerator
             GameObject p = ResourceManager.load<GameObject>("Prefab/UI/Subpanel/" + pname);
             if (p != null)
             {
-                subpanels.Add(spt, world.handle<PoolHandler>().poolify(p, 3));
+                subpanels.Add(spt, world.handle<PoolHandler>().poolify(p, 32));
 
             }
         }
 
         TextManager.load();
+        InputManager.load();
     }
     public void generate(WorldType worldType, int worldIndex)
     {
@@ -71,19 +73,19 @@ public class InterfaceHandler : Handler, IHandlerGenerator
             panel = null;
         }
     }
-    public T bringSubPanel<T, V>(SubPanelType subpanel) where T : SubPanel where V : Panel
+    public T bringSubPanel<T, V>(SubPanelType subpanel, V parentPanel) where T : SubPanel where V : Panel
     {
         if (subpanels.ContainsKey(subpanel))
         {
             PoolObject pooledPanel = subpanels[subpanel].bring();
 
             GameObject obj = pooledPanel.getObject();
-            obj.gameObject.transform.SetParent(panel.transform);
+            obj.gameObject.transform.SetParent(parentPanel.transform);
             obj.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
             obj.gameObject.transform.localScale = new Vector3(1, 1, 1);
             
             T sp = obj.GetComponent<T>();
-            sp.initialize<V>(world, panel as V);
+            sp.initialize<V>(world, parentPanel);
             sp.setAsPooled(pooledPanel);
 
             pooledPanel.wakeObject();

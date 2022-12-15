@@ -86,13 +86,19 @@ public class Panel : MonoBehaviour
     }
     protected void endLaunch() { onLaunch = false; }
     public PoolObject getPooledObject() { return pooledObject; }
-    public Transform getOther(string itemName) 
+    public Data getOther(string itemName) 
     {  
-        return oth.FirstOrDefault(c => c.name == itemName).item;
+        return oth.FirstOrDefault(c => c.name == itemName);
     }
     protected T getOther<T>(string itemName) where T : GameInteractable
     {
-        return (T)Activator.CreateInstance(typeof(T), new object[] { this.world, getOther(itemName) });
+        Data other = getOther(itemName);
+
+        if (other != null)
+        {
+            return (T)Activator.CreateInstance(typeof(T), new object[] { this.world, other.item, other.action});
+        }
+        else return null;
     }
     public void setActive(bool condition)
     {
@@ -100,7 +106,7 @@ public class Panel : MonoBehaviour
     }
     public T addInteractable<T>(type interactableType, string key) where T : GameInteractable
     {
-        T item = (T)Activator.CreateInstance(typeof(T), new object[] { this.world, new GameObject(key).AddComponent<RectTransform>() });
+        T item = (T)Activator.CreateInstance(typeof(T), new object[] { this.world, new GameObject(key).AddComponent<RectTransform>(), null });
         item.setParent(this);
 
         if(!interactables[interactableType].ContainsKey(key))

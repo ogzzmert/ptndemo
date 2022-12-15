@@ -32,7 +32,7 @@ public class MenuPanel : Panel
 
         if (credits == null || !credits.getPooledObject().isAwake())
         {
-            credits = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, MenuPanel>(SubPanelType.Message);
+            credits = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, MenuPanel>(SubPanelType.Message, this);
 
             credits.getInteractable<GameBar>(Panel.type.bar, "box")
                 .initialize

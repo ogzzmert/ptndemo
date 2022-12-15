@@ -11,12 +11,12 @@ public class GameButton : GameBar, IGameClickable
     {
         this.image.raycastTarget = true;
         setButton();
-        if (action != null) onClick(() => action.Invoke());
     }
     protected virtual void setButton()
     {
         this.button = this.transform.gameObject.GetComponent<Button>();
         this.button.transition = Selectable.Transition.None;
+        if (action != null) onClick(() => action.Invoke());
     }
     public void initialize(string text, float size, UnityAction action = null, type buttonType = type.basic)
     {

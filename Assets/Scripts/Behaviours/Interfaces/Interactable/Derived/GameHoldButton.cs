@@ -13,8 +13,9 @@ public class GameHoldButton : GameButton, IGameHoldable
     }
     protected override void setButton()
     {
-        this.button = transform.gameObject.GetComponent<HoldButton>();
+        this.button = transform.gameObject.AddComponent<HoldButton>();
         this.button.transition = Selectable.Transition.None;
+        if (action != null) onClick(() => action.Invoke());
     }
 
     public new void onClick(UnityAction action)

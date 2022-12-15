@@ -8,7 +8,7 @@ public class MapHandler : Handler, IHandlerGenerator
 {
     [field: SerializeField] private Grid grid;
 
-    private enum Layer
+    public enum Layer
     {
         Ground = 0,
         Settlement = 1,
@@ -84,5 +84,13 @@ public class MapHandler : Handler, IHandlerGenerator
     private string getMapName(WorldType worldType, int worldIndex)
     {
         return worldType.ToString() + "/" + worldIndex.ToString();
+    }
+    public void setTile(Layer layer, Vector3Int position, TileBase tilebase)
+    {
+        layers[layer].SetTile(position, tilebase);
+    }
+    public void clearTilemap(Layer layer)
+    {
+        layers[layer].ClearAllTiles();
     }
 }

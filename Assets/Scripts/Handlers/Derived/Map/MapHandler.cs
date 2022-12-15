@@ -8,8 +8,15 @@ public class MapHandler : Handler, IHandlerGenerator
 {
     [field: SerializeField] private Grid grid;
 
+    private enum Layer
+    {
+        Ground = 0,
+        Settlement = 1,
+        Interactions = 2,
+        Hover = 3
+    }
     Dictionary<string, GameObject> maps = new Dictionary<string, GameObject>();
-    Tilemap basemap;
+    Dictionary<Layer, Tilemap> layers = new Dictionary<Layer, Tilemap>();
 
     protected override void initialize()
     {
@@ -36,27 +43,46 @@ public class MapHandler : Handler, IHandlerGenerator
 
         if (maps.ContainsKey(mapname))
         {
-            loadBaseMap(mapname);
+            load(mapname);
         }
     }
     public void degenerate()
     {
-        if (basemap != null) world.destroy(basemap.gameObject);
-        basemap = null;
+        if (layers.Count > 0)
+        {
+            foreach(Tilemap t in layers.Values) world.destroy(t.gameObject);
+        }
+        layers.Clear();
     }
-    private void loadBaseMap(string mapname)
+    private void load(string mapname)
     {
-        basemap = world.spawn(maps[mapname]).GetComponent<Tilemap>();
-        basemap.transform.SetParent(grid.transform);
-        basemap.transform.localPosition = Vector2.zero;
-        basemap.transform.localScale = new Vector3(1, 1, 1);
+        foreach(Layer layer in Enum.GetValues(typeof(Layer)))
+        {
+            if (layer != Layer.Ground)
+            {
+                GameObject obj = new GameObject(layer.ToString());
+                obj.transform.SetParent(grid.transform);
+                obj.transform.localPosition = Vector2.zero;
+                obj.transform.localScale = new Vector3(1, 1, 1);
+
+                TilemapRenderer tmr = obj.AddComponent<TilemapRenderer>();
+                tmr.sortingOrder = (int)layer;
+                tmr.mode = TilemapRenderer.Mode.Individual;
+
+                layers.Add(layer, obj.GetComponent<Tilemap>());
+            }
+            else
+            {
+                layers.Add(layer, world.spawn(maps[mapname]).GetComponent<Tilemap>());
+                layers[layer].gameObject.name = layer.ToString();
+                layers[layer].transform.SetParent(grid.transform);
+                layers[layer].transform.localPosition = Vector2.zero;
+                layers[layer].transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
     }
     private string getMapName(WorldType worldType, int worldIndex)
     {
         return worldType.ToString() + "/" + worldIndex.ToString();
-    }
-    private void Update()
-    {
-
     }
 }

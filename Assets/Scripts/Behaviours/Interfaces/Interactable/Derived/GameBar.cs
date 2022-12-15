@@ -19,6 +19,7 @@ public class GameBar : GameInteractable
     {
         setOpacity(255);
         this.image.raycastTarget = false;
+        this.textComponent = this.transform.GetComponentInChildren<Text>();
     }
     public void initialize(string text, float size = 1.5f, type barType = type.header)
     {
@@ -28,12 +29,15 @@ public class GameBar : GameInteractable
     {
         this.barType = barType;
         this.size = size;
-        this.textComponent = this.transform.gameObject.GetComponentInChildren<Text>();
         setText(text);
+    }
+    public void setSprite(Sprite sprite)
+    {
+        if (this.image != null) this.image.sprite = sprite;
     }
     public void setText(string newText)
     {
-        this.textComponent.text = newText;
+        if (this.textComponent != null) this.textComponent.text = newText;
     }
     public void changeType(Image.Type _type)
     {

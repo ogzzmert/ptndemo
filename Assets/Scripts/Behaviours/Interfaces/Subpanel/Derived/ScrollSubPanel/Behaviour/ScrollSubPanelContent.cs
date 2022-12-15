@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ScrollSubPanelContent : MonoBehaviour
+public class ScrollSubPanelContent : SubPanel
 {
     public float Width { get { return width; } }
     public float Height { get { return height; } }
@@ -13,6 +13,10 @@ public class ScrollSubPanelContent : MonoBehaviour
     private float width, height;
     private float childWidth, childHeight;
 
+    public override void initialize<T>(World world, T parentPanel)
+    {
+        base.initialize(world, parentPanel);
+    }
     public void build()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -26,8 +30,8 @@ public class ScrollSubPanelContent : MonoBehaviour
         width = rectTransform.rect.width;
         height = rectTransform.rect.height;
 
-        childWidth = rtChildren[0].rect.width;
-        childHeight = rtChildren[0].rect.height;
+        childWidth = rectTransform.GetChild(0).GetChild(0).GetComponent<RectTransform>().rect.width;
+        childHeight = rectTransform.GetChild(0).GetChild(0).GetComponent<RectTransform>().rect.height;
 
         setContent();
 

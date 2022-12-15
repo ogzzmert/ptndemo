@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
     private Vector2 lastDragPosition;
     private bool positiveDrag;
 
+    Dictionary<EntityProductType, SubPanel> list = new Dictionary<EntityProductType, SubPanel>();
+
     public override void initialize<T>(World world, T parentPanel)
     {
         base.initialize(world, parentPanel);
@@ -23,8 +26,26 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
 
     private void build()
     {
+        list.Clear();
+
+        scrollContent.initialize<ScrollSubPanel>(world, this);
+
+        foreach(EntityProductType ept in Enum.GetValues(typeof(EntityProductType)))
+        {
+            SubPanel item = world.handle<InterfaceHandler>()
+                .bringSubPanel<SubPanel, ScrollSubPanelContent>
+                    (
+                        SubPanelType.ListItem,
+                        scrollContent
+                    );
+
+            item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.load<Sprite>("UI/Entities/Product/" + ept.ToString()));
+            item.getInteractable<GameButton>(type.button, "button").setText(ept.ToString());
+        }
+
         scrollRect = GetComponent<ScrollRect>();
         scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
+
         scrollContent.build();
     }
     public void OnBeginDrag(PointerEventData eventData)

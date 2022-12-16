@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class TextManager
 {
-    public static Language currentLanguage = Language.ENG;
+    public static Language currentLanguage = Language.TR;
     static Dictionary<Content, TextContent> texts;
 
     protected class TextData
@@ -50,7 +50,11 @@ public class TextManager
     }
     public enum Content
     {
-        Credits = 99999
+        Credits = 10,
+        MenuCredits = 11,
+        MenuStart = 12,
+        ProductCraft = 13,
+        Products = 14,
     }
     public enum Language
     {

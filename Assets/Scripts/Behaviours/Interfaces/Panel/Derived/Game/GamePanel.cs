@@ -16,7 +16,7 @@ public class GamePanel : Panel
         middlePad.initialize<GamePanel>(world, this);
         rightWindow.initialize<GamePanel>(world, this);
 
-        showCraftableInfo(EntityProductType.Barracks);
+        rightWindow.showCraftableInfo(EntityProductType.Barracks);
 
         endLaunch();
 
@@ -30,6 +30,8 @@ public class GamePanel : Panel
     public void showCraftableInfo(EntityProductType productType)
     {
         rightWindow.showCraftableInfo(productType);
+
+        world.handle<AudioHandler>().playSoundButtonB();
     }
 
 }

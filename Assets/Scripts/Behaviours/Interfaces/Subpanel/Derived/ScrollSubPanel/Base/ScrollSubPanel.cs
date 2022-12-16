@@ -30,6 +30,8 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
 
         scrollContent.initialize<ScrollSubPanel>(world, this);
 
+        string[] productNames = TextManager.bring(TextManager.Content.Products).Split('*');
+
         foreach(EntityProductType ept in Enum.GetValues(typeof(EntityProductType)))
         {
             SubPanel item = world.handle<InterfaceHandler>()
@@ -41,7 +43,7 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
 
             item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>(ept.ToString()));
             GameButton button = item.getInteractable<GameButton>(type.button, "button");
-            button.setText(ept.ToString());
+            button.setText(productNames[(int)ept]);
             button.onClick(() => selectItem(ept));
         }
 

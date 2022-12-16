@@ -9,6 +9,9 @@ public class MenuPanel : Panel
     SubPanel credits;
     protected override void launch()
     {
+        getInteractable<GameButton>(type.button, "start").setText(TextManager.bring(TextManager.Content.MenuStart));
+        getInteractable<GameButton>(type.button, "credits").setText(TextManager.bring(TextManager.Content.MenuCredits));
+        
         world.handle<GameEventHandler>().call(GameEventType.onMenu);
         endLaunch();
     }

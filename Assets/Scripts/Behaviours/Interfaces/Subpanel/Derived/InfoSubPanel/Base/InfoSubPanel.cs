@@ -19,28 +19,42 @@ public class InfoSubPanel : SubPanel
 
         setMainImage(productType.ToString());
 
-        SubPanel craft = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
+        gameBar.setText(TextManager.bring(TextManager.Content.Products).Split('*')[(int)productType]);
 
-        craft.transform.SetParent(listHolder);
-        craft.GetComponent<RectTransform>().offsetMax = Vector2.zero;
-        craft.GetComponent<RectTransform>().offsetMin = Vector2.zero;
+        SubPanel craft = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
+        addToList(craft);
 
         craft.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>("Craft"));
 
         GameButton craftButton = craft.getInteractable<GameButton>(type.button, "button");
-        craftButton.setText("Craft!");
-        craftButton.onClick(() => tryCraftable(productType));
 
+        craftButton.setText(TextManager.bring(TextManager.Content.ProductCraft));
+        craftButton.onClick(() => tryCraftable(productType));
+        
         // productables
     }
     public void tryCraftable(EntityProductType productType)
     {
-        Debug.Log(productType);
+        world.handle<AudioHandler>().playSoundActionB();
     }
     private void setMainImage(string imageName)
     {
         gameBar.setSprite(ResourceManager.loadFromCache<Sprite>(imageName));
-        gameBar.setText(imageName);  // change later with textmanager.getname
+    }
+    private void addToList(SubPanel subPanel)
+    {
+        subPanel.transform.SetParent(listHolder);
+        subPanel.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+        subPanel.GetComponent<RectTransform>().offsetMin = Vector2.zero;
+
+        subPanel.transform.Translate
+        (
+            0, 
+            subPanel.transform.GetChild(0).GetComponent<RectTransform>().rect.height * list.Count,
+            0
+         );
+         
+        list.Add(subPanel);
     }
     private void clear()
     {

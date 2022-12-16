@@ -994,4 +994,4 @@ MonoBehaviour:
   oth: []
   parentPanel: {fileID: 0}
   scrollContent: {fileID: 4176249710254473910}
-  outOfBoundsThreshold: 100
+  outOfBoundsThreshold: 10

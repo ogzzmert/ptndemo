@@ -39,7 +39,7 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
                         scrollContent
                     );
 
-            item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.load<Sprite>("UI/Entities/Product/" + ept.ToString()));
+            item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>(ept.ToString()));
             GameButton button = item.getInteractable<GameButton>(type.button, "button");
             button.setText(ept.ToString());
             button.onClick(() => selectItem(ept));
@@ -52,7 +52,7 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
     }
     private void selectItem(EntityProductType type)
     {
-        Debug.Log(type.ToString());
+        getParentPanel<GamePanel>().showCraftableInfo(type);
     }
     public void OnBeginDrag(PointerEventData eventData)
     {

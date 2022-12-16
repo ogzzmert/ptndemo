@@ -43,6 +43,7 @@ public class InterfaceHandler : Handler, IHandlerGenerator
             }
         }
 
+        TextureManager.load();
         TextManager.load();
         InputManager.load();
     }
@@ -81,8 +82,6 @@ public class InterfaceHandler : Handler, IHandlerGenerator
 
             GameObject obj = pooledPanel.getObject();
             obj.gameObject.transform.SetParent(parentPanel.transform);
-            obj.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-            obj.gameObject.transform.localScale = new Vector3(1, 1, 1);
             
             T sp = obj.GetComponent<T>();
             sp.initialize<V>(world, parentPanel);

@@ -40,8 +40,9 @@ public class Panel : MonoBehaviour
         this.world = world;
         this.value = value;
         this.rect = GetComponent<RectTransform>();
-        this.rect.offsetMax = Vector2.zero;
         this.rect.offsetMin = Vector2.zero;
+        this.rect.offsetMax = Vector2.zero;
+        this.rect.localScale = new Vector3(1, 1, 1);
         setInteractables();
         launch();
     }

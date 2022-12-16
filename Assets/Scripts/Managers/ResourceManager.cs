@@ -6,17 +6,19 @@ using UnityEngine;
 public class ResourceManager
 {
     private ResourceManager() { }
-    private static Dictionary<string, UnityEngine.Object> cache = new Dictionary<string, UnityEngine.Object>();
+    private static Dictionary<Type, Dictionary<string, UnityEngine.Object>> cache = new Dictionary<Type, Dictionary<string, UnityEngine.Object>>();
 
-    public static bool save<T>(string name, string path) where T : UnityEngine.Object
+    public static bool save<T>(string path, string name) where T : UnityEngine.Object
     {
-        switch(cache.ContainsKey(name))
+        if (!cache.ContainsKey(typeof(T))) cache.Add(typeof(T), new Dictionary<string, UnityEngine.Object>());
+
+        switch(cache[typeof(T)].ContainsKey(name))
         {
             case true:
                 return true;
 
             case false:
-                cache.Add(name, load<T>(path));
+                cache[typeof(T)].Add(name, load<T>(path + name));
                 return false;
         }
     }
@@ -26,6 +28,6 @@ public class ResourceManager
     }
     public static T loadFromCache<T>(string name) where T : UnityEngine.Object
     {
-        return cache.ContainsKey(name) ? cache[name] as T : null;
+        return cache[typeof(T)].ContainsKey(name) ? cache[typeof(T)][name] as T : null;
     }
 }

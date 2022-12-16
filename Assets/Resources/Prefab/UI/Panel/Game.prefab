@@ -567,7 +567,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   parentPanel: {fileID: 0}
-  hover: {fileID: 11400000, guid: 9fd6b52ae03754b89bb5973826043cef, type: 2}
+  hover: {fileID: 11400000, guid: a5a1234fdbd894801815cbacc28758b1, type: 2}
+  select: {fileID: 11400000, guid: 945cf2b5c5e724151b757e1722223918, type: 2}
 --- !u!1 &8282742573474626998
 GameObject:
   m_ObjectHideFlags: 0

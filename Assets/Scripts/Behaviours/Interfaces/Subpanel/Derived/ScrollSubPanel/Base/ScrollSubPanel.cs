@@ -40,13 +40,19 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
                     );
 
             item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.load<Sprite>("UI/Entities/Product/" + ept.ToString()));
-            item.getInteractable<GameButton>(type.button, "button").setText(ept.ToString());
+            GameButton button = item.getInteractable<GameButton>(type.button, "button");
+            button.setText(ept.ToString());
+            button.onClick(() => selectItem(ept));
         }
 
         scrollRect = GetComponent<ScrollRect>();
         scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
 
         scrollContent.build();
+    }
+    private void selectItem(EntityProductType type)
+    {
+        Debug.Log(type.ToString());
     }
     public void OnBeginDrag(PointerEventData eventData)
     {

@@ -21,6 +21,10 @@ public class CameraHandler : Handler, IHandlerGenerator
     {
         mainCamera.localPosition = Vector2.zero;
     }
+    public void pushCamera(Vector3 direction)
+    {
+        mainCamera.Translate(0.01f * cameraSpeed * direction.x, 0.01f * cameraSpeed * direction.y, 0);
+    }
     public void runMenuCamera() { StartCoroutine(iterateMenuCamera()); }
     IEnumerator iterateMenuCamera()
     {

@@ -13,7 +13,8 @@ public class MapHandler : Handler, IHandlerGenerator
         Ground = 0,
         Settlement = 1,
         Interactions = 2,
-        Hover = 3
+        Select = 3,
+        Hover = 4
     }
     Dictionary<string, GameObject> maps = new Dictionary<string, GameObject>();
     Dictionary<Layer, Tilemap> layers = new Dictionary<Layer, Tilemap>();

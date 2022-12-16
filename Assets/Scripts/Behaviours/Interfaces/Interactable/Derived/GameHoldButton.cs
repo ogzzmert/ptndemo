@@ -30,19 +30,26 @@ public class GameHoldButton : GameButton, IGameHoldable
     {
         button.setActionUp(action);
     }
-    protected class HoldButton : Button, IPointerDownHandler, IPointerUpHandler
+    public void onClickHover(UnityAction actionEnter, UnityAction actionExit)
     {
-        UnityAction action, actionDown, actionUp;
+        button.setActionHover(actionEnter, actionExit);
+    }
+    protected class HoldButton : Button, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+    {
+        UnityAction actionHold, actionDown, actionUp, actionHoverEnter, actionHoverExit;
 
         bool ready = false;
         bool readyDown = false;
         bool readyUp = false;
+        bool readyHover = false;
+
         bool pressed = false;
+        bool hovered = false;
         
         public void setAction(UnityAction action)
         {
             ready = action != null;
-            this.action = action;
+            this.actionHold = action;
         }
         public void setActionDown(UnityAction action)
         {
@@ -54,6 +61,12 @@ public class GameHoldButton : GameButton, IGameHoldable
             readyUp = action != null;
             this.actionUp = action;
         }
+        public void setActionHover(UnityAction actionEnter, UnityAction actionExit)
+        {
+            readyHover = actionEnter != null && actionExit != null;
+            this.actionHoverEnter = actionEnter;
+            this.actionHoverExit = actionExit;
+        }
         public override void OnPointerDown(PointerEventData eventData)
         {
             pressed = true;
@@ -64,11 +77,24 @@ public class GameHoldButton : GameButton, IGameHoldable
             pressed = false;
             if (readyUp) actionUp.Invoke();
         }
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            hovered = true;
+        }
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            hovered = false;
+            if (readyHover) actionHoverExit.Invoke();
+        }
         void Update()
         {
             if (pressed && ready)
             {
-                this.action.Invoke();
+                actionHold.Invoke();
+            }
+            else if (hovered && ready)
+            {
+                actionHoverEnter.Invoke();
             }
         }
     }

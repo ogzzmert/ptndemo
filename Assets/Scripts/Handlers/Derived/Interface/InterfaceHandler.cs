@@ -42,10 +42,6 @@ public class InterfaceHandler : Handler, IHandlerGenerator
 
             }
         }
-
-        TextureManager.load();
-        TextManager.load();
-        InputManager.load();
     }
     public void generate(WorldType worldType, int worldIndex)
     {

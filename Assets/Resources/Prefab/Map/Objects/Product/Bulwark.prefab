@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8398046041763323559}
   - component: {fileID: 9128246980572919606}
   - component: {fileID: 713293052486405877}
+  - component: {fileID: 1291873521454210312}
   m_Layer: 0
   m_Name: Bulwark
   m_TagString: Untagged
@@ -212,3 +213,24 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &1291873521454210312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2664041278594332583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77757256ba56d2187913ca49c855a77b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <type>k__BackingField: 1
+  <durability>k__BackingField: 300
+  <cost>k__BackingField: 250
+  <bounds>k__BackingField:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 1, y: 1, z: 1}
+  productType: 5
+  <required>k__BackingField: 0100000006000000
+  craftable: []

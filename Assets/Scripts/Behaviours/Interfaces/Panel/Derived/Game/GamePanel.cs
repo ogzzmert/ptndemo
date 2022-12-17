@@ -34,4 +34,5 @@ public class GamePanel : Panel
         world.handle<AudioHandler>().playSoundButtonB();
     }
 
+    public Vector3Int getSelectedPosition() { return middlePad.getSelectedPosition(); }
 }

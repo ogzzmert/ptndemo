@@ -14,6 +14,7 @@ public class World : MonoBehaviour
             handler.initialize(this);
             handlers.Add(handler.GetType(), handler);
         }
+        loadManagers();
     }
     private void Start() 
     {
@@ -43,5 +44,14 @@ public class World : MonoBehaviour
     public T handle<T>() where T : Handler 
     { 
         return handlers[typeof(T)] as T; 
+    }
+    private void loadManagers()
+    {
+        // Managers needs to be loaded within a certain order
+        
+        InputManager.load();
+        TextManager.load();
+        TextureManager.load();
+        EntityManager.load();
     }
 }

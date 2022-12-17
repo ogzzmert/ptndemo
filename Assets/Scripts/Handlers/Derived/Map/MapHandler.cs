@@ -90,6 +90,10 @@ public class MapHandler : Handler, IHandlerGenerator
     {
         layers[layer].SetTile(position, tilebase);
     }
+    public void setTiles(Layer layer, BoundsInt bounds, TileBase[] tiles)
+    {
+        layers[layer].SetTilesBlock(bounds, tiles);
+    }
     public void clearTilemap(Layer layer)
     {
         layers[layer].ClearAllTiles();

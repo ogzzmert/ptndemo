@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6947658575816272218}
   - component: {fileID: 7660302495654117579}
   - component: {fileID: 2091623560117287176}
+  - component: {fileID: -8454758529741646982}
   m_Layer: 0
   m_Name: Barracks
   m_TagString: Untagged
@@ -362,3 +363,27 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &-8454758529741646982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3465594297045450842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77757256ba56d2187913ca49c855a77b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <type>k__BackingField: 1
+  <durability>k__BackingField: 500
+  <cost>k__BackingField: 1000
+  <bounds>k__BackingField:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 4, y: 4, z: 1}
+  productType: 0
+  <required>k__BackingField: 
+  craftable:
+  - <type>k__BackingField: 0
+    <cost>k__BackingField: 10
+    <required>k__BackingField: 

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 168202406582500097}
   - component: {fileID: 608061885439152784}
   - component: {fileID: 9167192573015386963}
+  - component: {fileID: -2000858134835954216}
   m_Layer: 0
   m_Name: Powerplant
   m_TagString: Untagged
@@ -65,7 +66,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 11
-      m_TileSpriteIndex: 11
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -75,7 +76,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 10
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -85,7 +86,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 7
-      m_TileSpriteIndex: 7
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -95,7 +96,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 6
-      m_TileSpriteIndex: 6
+      m_TileSpriteIndex: 10
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -148,22 +149,22 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: -3213875384231163607, guid: 1eac5de13508cd34da41b8aba4d8a9f1, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 8898840289840488267, guid: 1eac5de13508cd34da41b8aba4d8a9f1, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 5774064285770192504, guid: 1eac5de13508cd34da41b8aba4d8a9f1, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 7079835875739717011, guid: 1eac5de13508cd34da41b8aba4d8a9f1, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 1801619644039236545, guid: 1eac5de13508cd34da41b8aba4d8a9f1, type: 3}
   - m_RefCount: 1
@@ -262,3 +263,24 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &-2000858134835954216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5919658721617449473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77757256ba56d2187913ca49c855a77b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <type>k__BackingField: 1
+  <durability>k__BackingField: 350
+  <cost>k__BackingField: 750
+  <bounds>k__BackingField:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 2, y: 3, z: 1}
+  productType: 1
+  <required>k__BackingField: 00000000
+  craftable: []

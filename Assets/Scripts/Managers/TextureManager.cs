@@ -5,11 +5,14 @@ using UnityEngine.UI;
 public class TextureManager
 {
     private static Font font;
-    
-    private TextureManager() { }
 
+    private TextureManager() { }
     public static void load()
     {
+        foreach(EntityUnitType eut in Enum.GetValues(typeof(EntityUnitType)))
+        {
+            ResourceManager.save<Sprite>("UI/Entities/Unit/", eut.ToString());
+        }
         foreach(EntityProductType ept in Enum.GetValues(typeof(EntityProductType)))
         {
             ResourceManager.save<Sprite>("UI/Entities/Product/", ept.ToString());

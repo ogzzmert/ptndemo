@@ -15,26 +15,66 @@ public class InfoSubPanel : SubPanel
     }
     public void showCraftableInfo(EntityProductType productType)
     {
+        // Clear previous buttons on info screen
         clear();
 
+        // Get related entity data from the manager
+        ProductEntity entity = EntityManager.GetProduct(productType);
+
+        // set info panel's main icon to product image
         setMainImage(productType.ToString());
 
-        gameBar.setText(TextManager.bring(TextManager.Content.Products).Split('*')[(int)productType]);
+        // set information text for the product
+        string[] productNames = TextManager.bring(TextManager.Content.Products).Split('*');
+        string information = 
+            productNames[(int)productType] + "\n" + 
+            "[ " + entity.bounds.size.x + " x " + entity.bounds.size.y + " ]";
 
+        if (entity.required.Length > 0) information += "\n\n" + TextManager.bring(TextManager.Content.Required) + "\n";
+
+        for(int i = 0; i < entity.required.Length; i++) information += productNames[(int)entity.required[i]] + "\n";
+
+        gameBar.setText(information);
+
+        // generate button for crafting
+        
         SubPanel craft = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
+
         addToList(craft);
 
         craft.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>("Craft"));
 
         GameButton craftButton = craft.getInteractable<GameButton>(type.button, "button");
 
-        craftButton.setText(TextManager.bring(TextManager.Content.ProductCraft));
-        craftButton.onClick(() => tryCraftable(productType));
+        craftButton.setText
+            (
+                entity.cost + " " + TextManager.bring(TextManager.Content.Currency) + "\n" +
+                TextManager.bring(TextManager.Content.ProductCraft)
+            );
+
+        craftButton.onClick(() => tryCraftable(entity));
         
-        // productables
+        // generate productable unit information panels
+
+        string[] unitNames = TextManager.bring(TextManager.Content.Units).Split('*');
+
+        foreach(ProductEntity.Craftable craftable in entity.GetCraftables())
+        {
+            SubPanel item = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListInfo, this);
+
+            addToList(item);
+
+            item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>(craftable.type.ToString()));
+            item.getInteractable<GameButton>(type.button, "button").setText(unitNames[(int)craftable.type]);
+        }
     }
-    public void tryCraftable(EntityProductType productType)
+    void tryCraftable(ProductEntity entity)
     {
+        BoundsInt bounds = entity.bounds;
+        bounds.position = getParentPanel<GamePanel>().getSelectedPosition();
+
+        world.handle<MapHandler>().setTiles(MapHandler.Layer.Settlement, bounds, entity.tiles);
+
         world.handle<AudioHandler>().playSoundActionB();
     }
     private void setMainImage(string imageName)
@@ -47,12 +87,12 @@ public class InfoSubPanel : SubPanel
         subPanel.GetComponent<RectTransform>().offsetMax = Vector2.zero;
         subPanel.GetComponent<RectTransform>().offsetMin = Vector2.zero;
 
-        subPanel.transform.Translate
+        subPanel.transform.localPosition = new Vector3
         (
             0, 
             subPanel.transform.GetChild(0).GetComponent<RectTransform>().rect.height * list.Count,
             0
-         );
+        );
          
         list.Add(subPanel);
     }

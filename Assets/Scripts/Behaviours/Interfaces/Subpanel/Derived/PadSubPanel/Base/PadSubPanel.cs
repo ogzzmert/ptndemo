@@ -84,4 +84,5 @@ public class PadSubPanel : SubPanel
 
         world.handle<MapHandler>().setTile(MapHandler.Layer.Select, position, select);
     }
+    public Vector3Int getSelectedPosition() { return selectPosition; }
 }

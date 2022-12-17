@@ -5,6 +5,7 @@ public class Calculator
 {
     public static System.Random random {get; private set;} = new System.Random();
     static Vector2 normVector = new Vector2(0, -1);
+    private Calculator() { }
     public static float getDistance(float x, float z, float x_, float z_)
     {
         float result = (x - x_) * (x - x_) + (z - z_) * (z - z_);
@@ -12,10 +13,6 @@ public class Calculator
         return result;
     }
     public static float getDistance(Vector3 one, Vector3 another)
-    {
-        return getDistance(one.x, one.z, another.x, another.z);
-    }
-    public static float getDistance(Entity.Position one, Entity.Position another)
     {
         return getDistance(one.x, one.z, another.x, another.z);
     }

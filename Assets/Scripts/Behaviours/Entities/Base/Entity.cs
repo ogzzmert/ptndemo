@@ -3,19 +3,16 @@ using UnityEngine.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class Entity : MonoBehaviour
 {
-    public class Data
-    {
-        public int index;
-        public string code;
-        public EntityType type;
-        public string info;
-        public Position position;
+    [field: SerializeField] public EntityType type { get; private set; }
+    [field: SerializeField] public int durability { get; private set; }
+    [field: SerializeField] public int cost { get; private set; }
+    [field: SerializeField] public BoundsInt bounds { get; private set; }
+    public TileBase[] tiles { get; private set; }
 
-    }
-    public Data data { get; private set; }
     protected World world { get; private set; }
     protected Dictionary<string, GameLabel> labels {get; private set;}
     public Transform baseObject { get; private set; }
@@ -25,23 +22,11 @@ public class Entity : MonoBehaviour
     public bool isCore {get; private set;} = false;
     public bool isActive { get; private set; } = false;
     public bool isBuilt { get; private set; } = false;
-    public class Position
-    {
-        public int x;
-        public int z;
-        public int r;
-    }
+    public Vector3Int position { get; private set; }
 
-    public class Move
-    {
-        public Position[] p;  // position array
-        float speed;
-    }
-
-    public Entity(World world, Data data)
+    public virtual void initialize(World world)
     {
         this.world = world;
-        this.data = data;
         labels = new Dictionary<string, GameLabel>();
     }
     public virtual void initialize<T>(T item) where T : class
@@ -109,17 +94,9 @@ public class Entity : MonoBehaviour
     {
         name = data;
     }
-    protected void setCode(string code)
-    {
-        data.code = code;
-    }
     public int getID()
     {
         return ID;
-    }
-    public string getCode()
-    {
-        return data.code;
     }
     public string getName()
     {
@@ -141,36 +118,22 @@ public class Entity : MonoBehaviour
     {
         isBuilt = condition;
     }
-    protected virtual void setPosition(Entity.Position position)
+    protected virtual void setPosition(Vector3Int position)
     {
-        this.data.position = position;
-        baseObject.position = new Vector3(position.x * 0.1f, baseObject.position.y, position.z * -0.1f);
-        baseModel.eulerAngles = new Vector3(0, position.r, 0);
+        this.position = position;
+        // baseObject.position = new Vector3(position.x * 0.1f, baseObject.position.y, position.y * -0.1f);
     }
-    protected virtual void setRotation(int angle)
+    public float getDistanceTo(Vector3Int position)
     {
-        baseModel.eulerAngles = new Vector3(0, angle, 0);
-        this.data.position.r = angle;
-    }
-    public Vector3 getPosition()
-    {
-        return baseObject.position;
-    }
-    public virtual float getRotation()
-    {
-        return baseModel.eulerAngles.y;
-    }
-    public float getDistanceTo(Vector3 position)
-    {
-        return Calculator.getDistance(getPosition(), position);
-    }
-    public float getDistanceTo(Position position)
-    {
-        return Calculator.getDistance(this.data.position, position);
+        return Calculator.getDistance(this.position, position);
     }
     public virtual bool isInvisible()
     {
         // override for invisiblity check
         return false;
+    }
+    public void setTiles(Tilemap map)
+    {
+        tiles = map.GetTilesBlock(bounds);
     }
 }

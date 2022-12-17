@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1106436865445804330}
   - component: {fileID: 396048852365480123}
   - component: {fileID: 8230082399322663288}
+  - component: {fileID: -3993351154256680524}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -212,3 +213,23 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &-3993351154256680524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6857174065219702826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf039b8ea7013520eabb487f72647329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <type>k__BackingField: 2
+  <durability>k__BackingField: 250
+  <cost>k__BackingField: 100
+  <bounds>k__BackingField:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 1, y: 1, z: 0}
+  unitType: 1
+  operation: []

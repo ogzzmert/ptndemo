@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class TextManager
 {
-    public static Language currentLanguage = Language.TR;
-    static Dictionary<Content, TextContent> texts;
+    public static Language currentLanguage { get; private set; } = Language.ENG;
+    static Dictionary<Content, TextContent> texts = new Dictionary<Content, TextContent>();
 
     protected class TextData
     {
@@ -22,12 +22,9 @@ public class TextManager
         }
         public string get(Language language) { return items[language]; }
     }
-
     private TextManager() { }
-
     public static void load()
     {
-        texts = new Dictionary<Content, TextContent>();
 
         foreach(Content content in Enum.GetValues(typeof(Content)))
         {
@@ -55,6 +52,9 @@ public class TextManager
         MenuStart = 12,
         ProductCraft = 13,
         Products = 14,
+        Units = 15,
+        Currency = 16,
+        Required = 17
     }
     public enum Language
     {

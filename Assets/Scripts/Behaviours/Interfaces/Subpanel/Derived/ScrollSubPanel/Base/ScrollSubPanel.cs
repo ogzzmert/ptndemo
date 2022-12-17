@@ -89,11 +89,11 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
 
         if (positiveDrag)
         {
-            newPos.y = endItem.position.y - scrollContent.ChildHeight * 1.33f;
+            newPos.y = endItem.position.y - scrollContent.ChildHeight * (Screen.height / 500f);
         }
         else
         {
-            newPos.y = endItem.position.y + scrollContent.ChildHeight * 1.33f;
+            newPos.y = endItem.position.y + scrollContent.ChildHeight * (Screen.height / 500f);
         }
 
         currItem.position = newPos;

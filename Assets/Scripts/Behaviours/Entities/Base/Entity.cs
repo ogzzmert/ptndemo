@@ -9,7 +9,7 @@ public class Entity : MonoBehaviour
 {
     [field: SerializeField] public EntityType type { get; private set; }
     [field: SerializeField] public int durability { get; private set; }
-    [field: SerializeField] public int cost { get; private set; }
+    [field: SerializeField] public Belonging[] cost { get; private set; }
     [field: SerializeField] public BoundsInt bounds { get; private set; }
     public TileBase[] tiles { get; private set; }
 

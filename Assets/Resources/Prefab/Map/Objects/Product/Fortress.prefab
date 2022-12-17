@@ -257,7 +257,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <type>k__BackingField: 1
   <durability>k__BackingField: 750
-  <cost>k__BackingField: 2500
+  <cost>k__BackingField:
+  - resourceType: 0
+    amount: 2500
+  - resourceType: 2
+    amount: 750
+  - resourceType: 3
+    amount: 500
   <bounds>k__BackingField:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 2, y: 2, z: 1}

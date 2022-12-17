@@ -26,13 +26,17 @@ public class InfoSubPanel : SubPanel
 
         // set information text for the product
         string[] productNames = TextManager.bring(TextManager.Content.Products).Split('*');
+        string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
+
         string information = 
             productNames[(int)productType] + "\n" + 
-            "[ " + entity.bounds.size.x + " x " + entity.bounds.size.y + " ]";
+            "[ " + entity.bounds.size.x + " x " + entity.bounds.size.y + " ]\n\n";
+        
+        for(int i = 0; i < entity.cost.Length; i++) information += resourceNames[(int)entity.cost[i].resourceType] + " x" + entity.cost[i].amount + "\n";
 
-        if (entity.required.Length > 0) information += "\n\n" + TextManager.bring(TextManager.Content.Required) + "\n";
+        if (entity.required.Length > 0) information += "\n" + TextManager.bring(TextManager.Content.Required) + "\n\n";
 
-        for(int i = 0; i < entity.required.Length; i++) information += productNames[(int)entity.required[i]] + "\n";
+        for(int i = 0; i < entity.required.Length; i++) { information += productNames[(int)entity.required[i]]; if (i < entity.required.Length - 1) information += ", "; }
 
         gameBar.setText(information);
 
@@ -46,11 +50,7 @@ public class InfoSubPanel : SubPanel
 
         GameButton craftButton = craft.getInteractable<GameButton>(type.button, "button");
 
-        craftButton.setText
-            (
-                entity.cost + " " + TextManager.bring(TextManager.Content.Currency) + "\n" +
-                TextManager.bring(TextManager.Content.ProductCraft)
-            );
+        craftButton.setText(TextManager.bring(TextManager.Content.ProductCraft));
 
         craftButton.onClick(() => tryCraftable(entity));
         

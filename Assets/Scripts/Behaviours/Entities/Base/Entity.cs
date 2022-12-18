@@ -11,6 +11,7 @@ public class Entity : MonoBehaviour
     [field: SerializeField] public int durability { get; private set; }
     [field: SerializeField] public Belonging[] cost { get; private set; }
     [field: SerializeField] public BoundsInt bounds { get; private set; }
+    [field: SerializeField] public MapTile[] ground { get; private set; }
     public TileBase[] tiles { get; private set; }
 
     protected World world { get; private set; }
@@ -24,14 +25,13 @@ public class Entity : MonoBehaviour
     public bool isBuilt { get; private set; } = false;
     public Vector3Int position { get; private set; }
 
-    public virtual void initialize(World world)
+    public virtual void initialize(World world, int id)
     {
         this.world = world;
+        setID(id);
+        setBaseObject(this.transform);
+        setBaseModel(this.transform);
         labels = new Dictionary<string, GameLabel>();
-    }
-    public virtual void initialize<T>(T item) where T : class
-    {
-        // override for game object initialization
     }
     public virtual void discard()
     {
@@ -90,7 +90,7 @@ public class Entity : MonoBehaviour
     {
         if (ID == 0) ID = index;
     }
-    protected void setName(string data)
+    public void setName(string data)
     {
         name = data;
     }
@@ -118,9 +118,10 @@ public class Entity : MonoBehaviour
     {
         isBuilt = condition;
     }
-    protected virtual void setPosition(Vector3Int position)
+    public virtual void setPosition(Vector3Int position)
     {
         this.position = position;
+        this.baseObject.position = position;
         // baseObject.position = new Vector3(position.x * 0.1f, baseObject.position.y, position.y * -0.1f);
     }
     public float getDistanceTo(Vector3Int position)

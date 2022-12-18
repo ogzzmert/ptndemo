@@ -387,9 +387,14 @@ MonoBehaviour:
   <bounds>k__BackingField:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 4, y: 4, z: 1}
-  productType: 0
+  <ground>k__BackingField: 0100000002000000
+  <productType>k__BackingField: 0
   <required>k__BackingField: 
   craftable:
   - <type>k__BackingField: 0
     <cost>k__BackingField: 10
-    <required>k__BackingField: 
+    <required>k__BackingField:
+    - resourceType: 0
+      amount: 50
+    - resourceType: 3
+      amount: 30

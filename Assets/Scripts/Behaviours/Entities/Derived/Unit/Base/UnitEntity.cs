@@ -4,18 +4,17 @@ using UnityEngine.Tilemaps;
 
 public class UnitEntity : Entity
 {
-    [field: SerializeField] private EntityUnitType unitType;
-    [field: SerializeField] private Operation[] operation;
+    [field: SerializeField] public EntityUnitType unitType { get; private set; }
+    [field: SerializeField] public Operation[] operation { get; private set; }
 
     [Serializable]
     public class Operation
     {
-        [field: SerializeField] public EntityUnitType type { get; private set; }
-        [field: SerializeField] public int cost { get; private set; }
-        [field: SerializeField] public EntityProductType[] required { get; private set; }
+        [field: SerializeField] public EntityUnitOperationType type { get; private set; }
+        [field: SerializeField] public Belonging[] required { get; private set; }
     }
-    public override void initialize(World world)
+    public override void initialize(World world, int id)
     {
-        base.initialize(world);
+        base.initialize(world, id);
     }
 }

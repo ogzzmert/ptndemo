@@ -35,13 +35,7 @@ public class MenuPanel : Panel
 
         if (credits == null || !credits.getPooledObject().isAwake())
         {
-            credits = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, MenuPanel>(SubPanelType.Message, this);
-
-            credits.getInteractable<GameBar>(Panel.type.bar, "box")
-                .initialize
-                (
-                    TextManager.bring(TextManager.Content.Credits)
-                );
+            credits = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(TextManager.Content.Credits));
         }
     }
 }

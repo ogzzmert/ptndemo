@@ -265,6 +265,7 @@ MonoBehaviour:
   <bounds>k__BackingField:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 2, y: 2, z: 1}
-  productType: 2
+  <ground>k__BackingField: 0100000002000000
+  <productType>k__BackingField: 2
   <required>k__BackingField: 0000000001000000
   craftable: []

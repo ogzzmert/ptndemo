@@ -40,7 +40,10 @@ public class World : MonoBehaviour
     }
     public bool isReady() { return true; }
     public GameObject spawn(GameObject g) { return Instantiate(g); }
-    public void destroy(GameObject g) { Destroy(g); }
+    public void destroy<T>(T g) where T : UnityEngine.Object
+    { 
+        Destroy(g); 
+    }
     public T handle<T>() where T : Handler 
     { 
         return handlers[typeof(T)] as T; 

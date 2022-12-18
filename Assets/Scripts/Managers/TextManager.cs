@@ -51,10 +51,13 @@ public class TextManager
         MenuCredits = 11,
         MenuStart = 12,
         ProductCraft = 13,
-        Products = 14,
-        Units = 15,
-        Currency = 16,
-        Required = 17
+        ProductCraftPrompt = 14,
+        Products = 15,
+        Units = 16,
+        Currency = 17,
+        Required = 18,
+        NoResources = 19,
+        IneligiblePosition = 20
     }
     public enum Language
     {

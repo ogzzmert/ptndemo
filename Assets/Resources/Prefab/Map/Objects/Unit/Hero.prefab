@@ -228,12 +228,21 @@ MonoBehaviour:
   <type>k__BackingField: 2
   <durability>k__BackingField: 250
   <cost>k__BackingField:
-  - resourceType: 0
-    amount: 250
-  - resourceType: 4
+  - resourceType: 3
     amount: 100
   <bounds>k__BackingField:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 1, y: 1, z: 0}
-  unitType: 1
-  operation: []
+  <ground>k__BackingField: 010000000200000005000000
+  <unitType>k__BackingField: 1
+  <operation>k__BackingField:
+  - <type>k__BackingField: 0
+    <required>k__BackingField:
+    - resourceType: 0
+      amount: 5
+    - resourceType: 4
+      amount: 1
+  - <type>k__BackingField: 1
+    <required>k__BackingField:
+    - resourceType: 4
+      amount: 10

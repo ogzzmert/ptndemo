@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InterfaceHandler : Handler, IHandlerGenerator
 {
@@ -88,5 +89,47 @@ public class InterfaceHandler : Handler, IHandlerGenerator
             return sp;
         }
         else return null;
+    }
+
+    public SubPanel bringMessage(string content, UnityAction action = null)
+    {
+        SubPanel message = bringSubPanel<SubPanel, Panel>(SubPanelType.Message, panel);
+        message.getInteractable<GameBar>(Panel.type.bar, "box").setText(content);
+
+        if (action != null) message.getInteractable<GameButton>(Panel.type.button, "button").onClick
+            (
+                () => 
+                {
+                    action.Invoke();
+                    message.discard();
+                }
+            );
+
+        return message;
+    }
+    public SubPanel bringPrompt(string content, UnityAction accept = null, UnityAction decline = null)
+    {
+        SubPanel message = bringSubPanel<SubPanel, Panel>(SubPanelType.Prompt, panel);
+        message.getInteractable<GameBar>(Panel.type.bar, "box").setText(content);
+
+        if (accept != null) message.getInteractable<GameButton>(Panel.type.button, "accept").onClick
+            (
+                () => 
+                {
+                    accept.Invoke();
+                    message.discard();
+                }
+            );
+
+        if (decline != null) message.getInteractable<GameButton>(Panel.type.button, "decline").onClick
+            (
+                () => 
+                {
+                    decline.Invoke();
+                    message.discard();
+                }
+            );
+
+        return message;
     }
 }

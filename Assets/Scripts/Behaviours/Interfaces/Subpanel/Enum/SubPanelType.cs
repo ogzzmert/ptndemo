@@ -1,6 +1,7 @@
 public enum SubPanelType
 {
     Message = 0,
-    ListItem = 1,
-    ListInfo = 2
+    Prompt = 1,
+    ListItem = 2,
+    ListInfo = 3,
 }

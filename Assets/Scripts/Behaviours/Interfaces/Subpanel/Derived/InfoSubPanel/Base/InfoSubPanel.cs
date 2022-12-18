@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class InfoSubPanel : SubPanel
 {
+    // This is a sub-panel of the GamePanel class, the information panel on the left side
     [field: SerializeField] Transform listHolder;
     List<SubPanel> list = new List<SubPanel>();
 
     GameBar gameBar;
+    SubPanel message;
     public override void initialize<T>(World world, T parentPanel)
     {
         base.initialize(world, parentPanel);
@@ -70,19 +72,78 @@ public class InfoSubPanel : SubPanel
     }
     void tryCraftable(ProductEntity entity)
     {
+        // try generating the product
+        // check if user has required resources
+
+        getParentPanel<GamePanel>().clearHover();
+
+        if (world.handle<UserHandler>().checkProductRequired(entity))
+        {
+            if(message != null && message.getPooledObject().isAwake()) message.getPooledObject().sendback();
+
+            message = world.handle<InterfaceHandler>().bringPrompt
+                (
+                    TextManager.bring(TextManager.Content.ProductCraftPrompt).Replace("%P", TextManager.bring(TextManager.Content.Products).Split('*')[(int)entity.productType]), 
+                    () => hoverProduct(entity)
+                );
+
+            world.handle<AudioHandler>().playSoundActionB();
+        }
+        else if (message == null || !message.getPooledObject().isAwake())
+        {
+            // failure message
+
+            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(TextManager.Content.NoResources));
+
+            world.handle<AudioHandler>().playSoundButtonB();
+        }
+    }
+    private void hoverProduct(ProductEntity entity)
+    {
+        // if both user has required sources and accepted the prompt message, enable hover for the product
+
+        GamePanel gp = getParentPanel<GamePanel>();
+
+        gp.setHoverProduct(entity);
+        gp.setSelectAction(() => placeProduct(entity));
+    }
+    private void placeProduct(ProductEntity entity)
+    {
+        // try placing product
+        // check if world map is eligible
+        // if success, consume resources
+
         BoundsInt bounds = entity.bounds;
         bounds.position = getParentPanel<GamePanel>().getSelectedPosition();
 
-        world.handle<MapHandler>().setTiles(MapHandler.Layer.Settlement, bounds, entity.tiles);
+        if (world.handle<MapHandler>().canPlaceEntity(entity.ground, bounds))
+        {
+            ProductEntity newProduct = world.handle<UserHandler>().productCraft(entity, bounds.position);
 
-        world.handle<AudioHandler>().playSoundActionB();
+            if (newProduct != null)
+            {
+                world.handle<MapHandler>().setTiles(MapLayer.Settlement, bounds, entity.tiles);
+
+                getParentPanel<GamePanel>().updateStatusValues();
+            }
+        }
+        else
+        {
+            // throw an error for ineligible positioning
+            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(TextManager.Content.IneligiblePosition));
+        }
+        
     }
     private void setMainImage(string imageName)
     {
+        // set info panel's main sprite
+
         gameBar.setSprite(ResourceManager.loadFromCache<Sprite>(imageName));
     }
     private void addToList(SubPanel subPanel)
     {
+        // add a bar or a button to the info panel, reversed order
+
         subPanel.transform.SetParent(listHolder);
         subPanel.GetComponent<RectTransform>().offsetMax = Vector2.zero;
         subPanel.GetComponent<RectTransform>().offsetMin = Vector2.zero;
@@ -98,7 +159,10 @@ public class InfoSubPanel : SubPanel
     }
     private void clear()
     {
+        // clear info panel buttons and the containing list
+
         foreach(SubPanel sp in list) sp.discard();
         list.Clear();
+        getParentPanel<GamePanel>().clearHover();
     }
 }

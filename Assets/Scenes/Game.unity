@@ -362,6 +362,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 1955260810}
+  match:
+  - type: 1
+    tile: {fileID: 11400000, guid: ddfda2037738f465db5654bf132d1571, type: 2}
+  - type: 3
+    tile: {fileID: 11400000, guid: eb9827f4c0a0f470eb1016bc1ac52554, type: 2}
+  - type: 4
+    tile: {fileID: 11400000, guid: cfc51c292e3184020b56d79c1fadeca5, type: 2}
+  - type: 2
+    tile: {fileID: 11400000, guid: a2d65cb02c0d240549843960c3e1621f, type: 2}
+  - type: 5
+    tile: {fileID: 11400000, guid: 00d62f8b3ac4a4a9eb0c1f77c1f9eb47, type: 2}
 --- !u!1 &531657636
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,15 +705,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   belongings:
   - resourceType: 0
-    amount: 5000
+    amount: 500000
   - resourceType: 1
-    amount: 1500
+    amount: 150000
   - resourceType: 2
-    amount: 1500
+    amount: 150000
   - resourceType: 3
-    amount: 1500
+    amount: 150000
   - resourceType: 4
-    amount: 100
+    amount: 10000
 --- !u!1 &1241322471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207,14 +1218,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056145568}
-  m_LocalRotation: {x: 0, y: 0, z: 0.00008726013, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 989285504}
   m_Father: {fileID: 915332672}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.01}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2056145570
 MonoBehaviour:
   m_ObjectHideFlags: 0

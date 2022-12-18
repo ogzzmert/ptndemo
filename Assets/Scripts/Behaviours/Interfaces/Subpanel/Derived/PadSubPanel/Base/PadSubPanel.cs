@@ -2,20 +2,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 public class PadSubPanel : SubPanel
 {
-    [field: SerializeField] private TileBase hover;
+    [field: SerializeField] private TileBase[] hover;
+    [field: SerializeField] private BoundsInt hoverBounds;
     [field: SerializeField] private TileBase select;
+
+    private TileBase[] hoverTiles;
+    private BoundsInt hoverBoundsInt;
     GameHoldButton pad;
     Vector3 holdPosition;
     Vector3Int beginPosition, selectPosition, hoverPosition;
     DateTime pressTreshold, holdTreshold;
+    UnityAction selectAction;
     public override void initialize<T>(World world, T parentPanel)
     {
         base.initialize(world, parentPanel);
+
+        clearHover();
 
         pad = getOther<GameHoldButton>("pad");
 
@@ -29,18 +36,24 @@ public class PadSubPanel : SubPanel
 
     void hoverTilePad()
     {
+        // set hovering cursor while pointer is over the game pad
         Vector3Int position = getPadPositionInt();
 
         if (hoverPosition != position)
         {
-            world.handle<MapHandler>().clearTilemap(MapHandler.Layer.Hover);
+            world.handle<MapHandler>().clearTilemap(MapLayer.Hover);
             hoverPosition = position;
-            world.handle<MapHandler>().setTile(MapHandler.Layer.Hover, hoverPosition, hover);
+
+            BoundsInt hoverBoundsTemp = hoverBoundsInt;
+            hoverBoundsTemp.position = hoverPosition;
+
+            world.handle<MapHandler>().setTiles(MapLayer.Hover, hoverBoundsTemp, hoverTiles);
         }
     }
     void endHoverTilePad()
     {
-        world.handle<MapHandler>().clearTilemap(MapHandler.Layer.Hover);
+        // exit hovering, clear hover layer
+        world.handle<MapHandler>().clearTilemap(MapLayer.Hover);
     }
     void moveTilePad()
     {
@@ -76,13 +89,35 @@ public class PadSubPanel : SubPanel
     {
         if (selectPosition != position)
         {
-            world.handle<MapHandler>().clearTilemap(MapHandler.Layer.Select);
+            world.handle<MapHandler>().clearTilemap(MapLayer.Select);
 
             selectPosition = position;
+            
             world.handle<AudioHandler>().playSoundActionA();
         }
 
-        world.handle<MapHandler>().setTile(MapHandler.Layer.Select, position, select);
+        if (selectAction != null)
+        {
+            selectAction.Invoke();
+            clearHover();
+        }
+
+        world.handle<MapHandler>().setTile(MapLayer.Select, position, select);
     }
     public Vector3Int getSelectedPosition() { return selectPosition; }
+    public void setHover(BoundsInt bounds, TileBase[] tiles)
+    {
+        hoverTiles = tiles.Clone() as TileBase[];
+        hoverBoundsInt = bounds;
+    }
+    public void clearHover()
+    {
+        hoverTiles = hover.Clone() as TileBase[];
+        hoverBoundsInt = hoverBounds;
+        selectAction = null;
+    }
+    public void setSelectAction(UnityAction action)
+    {
+        this.selectAction = action;
+    }
 }

@@ -404,9 +404,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a42374e5aac5e4072ab7a77915fd41d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wndw: []
   btn:
-  - name: close
+  - name: button
     item: {fileID: 1510531020438916811}
     action:
       m_PersistentCalls:

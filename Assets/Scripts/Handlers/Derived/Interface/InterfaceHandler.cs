@@ -91,44 +91,47 @@ public class InterfaceHandler : Handler, IHandlerGenerator
         else return null;
     }
 
-    public SubPanel bringMessage(string content, UnityAction action = null)
+    public SubPanel bringMessage(string content, UnityAction actionBase = null)
     {
         SubPanel message = bringSubPanel<SubPanel, Panel>(SubPanelType.Message, panel);
         message.getInteractable<GameBar>(Panel.type.bar, "box").setText(content);
 
-        if (action != null) message.getInteractable<GameButton>(Panel.type.button, "button").onClick
-            (
-                () => 
-                {
-                    action.Invoke();
-                    message.discard();
-                }
-            );
+        UnityAction action;
+
+        if (actionBase != null) action = () => 
+            {
+                actionBase.Invoke();
+                message.discard();
+            };
+        else action = () => { message.discard(); };
+
+        message.getInteractable<GameButton>(Panel.type.button, "button").onClick(action);
 
         return message;
     }
-    public SubPanel bringPrompt(string content, UnityAction accept = null, UnityAction decline = null)
+    public SubPanel bringPrompt(string content, UnityAction acceptBase = null, UnityAction declineBase = null)
     {
         SubPanel message = bringSubPanel<SubPanel, Panel>(SubPanelType.Prompt, panel);
         message.getInteractable<GameBar>(Panel.type.bar, "box").setText(content);
 
-        if (accept != null) message.getInteractable<GameButton>(Panel.type.button, "accept").onClick
-            (
-                () => 
-                {
-                    accept.Invoke();
-                    message.discard();
-                }
-            );
+        UnityAction accept, decline;
 
-        if (decline != null) message.getInteractable<GameButton>(Panel.type.button, "decline").onClick
-            (
-                () => 
+        if (acceptBase != null) accept = () => 
                 {
-                    decline.Invoke();
+                    acceptBase.Invoke();
                     message.discard();
-                }
-            );
+                };
+        else accept = () => { message.discard(); };
+
+        if (declineBase != null) decline = () => 
+                {
+                    declineBase.Invoke();
+                    message.discard();
+                };
+        else decline = () => { message.discard(); };
+
+        message.getInteractable<GameButton>(Panel.type.button, "accept").onClick(accept);
+        message.getInteractable<GameButton>(Panel.type.button, "decline").onClick(decline);
 
         return message;
     }

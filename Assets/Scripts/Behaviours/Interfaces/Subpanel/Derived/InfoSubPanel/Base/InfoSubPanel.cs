@@ -98,16 +98,16 @@ public class InfoSubPanel : SubPanel
         GamePanel gp = getParentPanel<GamePanel>();
 
         gp.setHoverEntity(entity);
-        gp.setSelectAction(() => placeProduct(entity));
+        gp.setSelectAction((Vector3Int position) => placeProduct(entity, position));
     }
-    private void placeProduct(ProductEntity entity)
+    private void placeProduct(ProductEntity entity, Vector3Int position)
     {
         // try placing product
         // check if world map is eligible
         // if success, consume resources
 
         BoundsInt bounds = entity.bounds;
-        bounds.position = getParentPanel<GamePanel>().getSelectedPosition();
+        bounds.position = position;
 
         if (world.handle<MapHandler>().canPlaceEntity(entity.ground, bounds))
         {
@@ -115,7 +115,20 @@ public class InfoSubPanel : SubPanel
 
             getParentPanel<GamePanel>().updateStatusValues();
         }
-        else errorInfo(TextManager.Content.IneligiblePosition);
+        else 
+        { 
+            errorInfo(TextManager.Content.IneligiblePosition);
+
+            message.getInteractable<GameButton>(type.button, "button").onClick
+                (
+                    () =>
+                    {
+                        showProductInfo(entity.productType);
+                        hoverProduct(entity);
+                        message.discard();
+                    }
+                );
+        }
         
     }
 
@@ -257,7 +270,45 @@ public class InfoSubPanel : SubPanel
                     operationNames[(int)operation.type]
                 );
 
-            // item.getInteractable<GameButton>(type.button, "button").onClick(() => tryCraftable(entity, craftable));
+            item.getInteractable<GameButton>(type.button, "button").onClick(() => tryUnitOperation(entity, operation));
+        }
+    }
+    void tryUnitOperation(UnitEntity entity, UnitEntity.Operation operation)
+    {
+        // prompt operation type and set its function
+        if (entity != null && entity.durability > 0)
+        {
+            if(message != null && message.getPooledObject().isAwake()) message.getPooledObject().sendback();
+
+            string operationName = TextManager.bring(TextManager.Content.Operations).Split('*')[(int)operation.type];
+            string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
+
+            string operationCost = operationName + ": \n\n";
+            foreach(Belonging b in operation.required) operationCost += resourceNames[(int)b.resourceType] + " x" + b.amount + "\n";
+
+            message = world.handle<InterfaceHandler>().bringPrompt
+                (
+                    operationCost, 
+                    () => castOperation(entity, operation)
+                );
+
+            world.handle<AudioHandler>().playSoundActionA();
+        }
+        else errorInfo(TextManager.Content.NoResources);
+
+    }
+    void castOperation(UnitEntity entity, UnitEntity.Operation operation)
+    {
+        if (operation.type == EntityUnitOperationType.Move)
+        {
+            getParentPanel<GamePanel>().setHoverEntity(EntityManager.GetUnit(entity.unitType));
+            getParentPanel<GamePanel>().setSelectAction
+                (
+                    (Vector3Int position) => 
+                        {
+                            // fill for movement command
+                        }
+                );
         }
     }
     private void setMainImage(string imageName)

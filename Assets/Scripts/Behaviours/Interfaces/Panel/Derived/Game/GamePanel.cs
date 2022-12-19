@@ -45,9 +45,8 @@ public class GamePanel : Panel
     }
     public void clearInfo() { rightWindow.clear(); }
     public void setSelectedPosition(Vector3Int position) { middlePad.setSelectedPosition(position); }
-    public Vector3Int getSelectedPosition() { return middlePad.getSelectedPosition(); }
     public void setHoverEntity(Entity entity) { middlePad.setHover(entity.bounds, entity.tiles); }
     public void clearHover() { middlePad.clearHover(); }
-    public void setSelectAction(UnityAction action) { middlePad.setSelectAction(action); }
+    public void setSelectAction(UnityAction<Vector3Int> action) { middlePad.setSelectAction(action); }
     public void updateStatusValues() { statsInfo.updateValues(); }
 }

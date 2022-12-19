@@ -17,7 +17,7 @@ public class PadSubPanel : SubPanel
     Vector3 holdPosition;
     Vector3Int beginPosition, selectPosition, hoverPosition;
     DateTime pressTreshold, holdTreshold;
-    UnityAction selectAction;
+    UnityAction<Vector3Int> selectAction;
     public override void initialize<T>(World world, T parentPanel)
     {
         base.initialize(world, parentPanel);
@@ -98,10 +98,9 @@ public class PadSubPanel : SubPanel
 
         if (selectAction != null)
         {
-            selectAction.Invoke();
+            selectAction.Invoke(position);
             clearHover();
         }
-
         tryHighlightSelected();
 
         world.handle<MapHandler>().setTile(MapLayer.Select, position, select);
@@ -117,7 +116,6 @@ public class PadSubPanel : SubPanel
         }
         else getParentPanel<GamePanel>().clearInfo();
     }
-    public Vector3Int getSelectedPosition() { return selectPosition; }
     public void setHover(BoundsInt bounds, TileBase[] tiles)
     {
         hoverTiles = tiles.Clone() as TileBase[];
@@ -129,7 +127,7 @@ public class PadSubPanel : SubPanel
         hoverBoundsInt = hoverBounds;
         selectAction = null;
     }
-    public void setSelectAction(UnityAction action)
+    public void setSelectAction(UnityAction<Vector3Int> action)
     {
         this.selectAction = action;
     }

@@ -88,7 +88,7 @@ public class Entity : MonoBehaviour
     }
     protected void setID(int index)
     {
-        if (ID == 0) ID = index;
+        ID = index;
     }
     public void setName(string data)
     {

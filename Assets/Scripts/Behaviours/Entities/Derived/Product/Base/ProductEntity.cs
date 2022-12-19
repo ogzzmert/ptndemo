@@ -8,6 +8,8 @@ public class ProductEntity : Entity
     [field: SerializeField] public EntityProductType[] required { get; private set; }
     [field: SerializeField] private Craftable[] craftable;
 
+    private Vector3Int[] spawnPositions;
+
     [Serializable]
     public class Craftable
     {
@@ -18,6 +20,7 @@ public class ProductEntity : Entity
     {
         base.initialize(world, id);
 
+        setSpawnPositions();
         setLabel<GameLabel>("durability", buildDurability);
     }
     private void buildDurability(GameLabel label)
@@ -25,4 +28,19 @@ public class ProductEntity : Entity
         // set health bar over objects when camera is nearby
     }
     public Craftable[] GetCraftables() { return craftable; }
+    public Vector3Int[] GetSpawnPositions() 
+    { 
+        return spawnPositions;
+    }
+    private void setSpawnPositions()
+    {
+        int index = 0;
+        int count = bounds.size.x * 2 + bounds.size.y * 2;
+        spawnPositions = new Vector3Int[count];
+
+        for(int x = 0; x < bounds.size.x; x++) { spawnPositions[index] = new Vector3Int(position.x + x, position.y - 1, 0); index++; }
+        for(int x = 0; x < bounds.size.x; x++) { spawnPositions[index] = new Vector3Int(position.x + x, position.y + bounds.size.y, 0); index++; }
+        for(int y = 0; y < bounds.size.y; y++) { spawnPositions[index] = new Vector3Int(position.x - 1, position.y + y, 0); index++; }
+        for(int y = 0; y < bounds.size.y; y++) { spawnPositions[index] = new Vector3Int(position.x + bounds.size.x, position.y + y, 0); index++; }
+    }
 }

@@ -42,4 +42,17 @@ public class Calculator
         }
         return child.gameObject;
     }
+    public static bool withinBounds(Vector3Int position, Vector3Int targetPosition, BoundsInt targetBounds)
+    {
+        for(int i = targetPosition.x; i < targetPosition.x + targetBounds.size.x; i++)
+        {
+            for(int j = targetPosition.y; j < targetPosition.y + targetBounds.size.y; j++)
+            {
+                Vector3Int boundPosition = new Vector3Int(i, j, 0);
+
+                if (boundPosition == position) return true;
+            }
+        }
+        return false;
+    }
 }

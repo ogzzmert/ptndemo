@@ -54,7 +54,7 @@ public class ScrollSubPanel : SubPanel, IBeginDragHandler, IDragHandler, IScroll
     }
     private void selectItem(EntityProductType type)
     {
-        getParentPanel<GamePanel>().showCraftableInfo(type);
+        getParentPanel<GamePanel>().showProductInfo(type);
     }
     public void OnBeginDrag(PointerEventData eventData)
     {

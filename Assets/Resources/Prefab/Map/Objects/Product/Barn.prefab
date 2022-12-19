@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <type>k__BackingField: 1
-  <durability>k__BackingField: 0
+  <durability>k__BackingField: 150
   <cost>k__BackingField:
   - resourceType: 0
     amount: 300

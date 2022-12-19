@@ -4,14 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 public class TextureManager
 {
-    private static Font font;
-
     private TextureManager() { }
     public static void load()
     {
         foreach(EntityUnitType eut in Enum.GetValues(typeof(EntityUnitType)))
         {
             ResourceManager.save<Sprite>("UI/Entities/Unit/", eut.ToString());
+        }
+        foreach(EntityUnitOperationType euop in Enum.GetValues(typeof(EntityUnitOperationType)))
+        {
+            ResourceManager.save<Sprite>("UI/Entities/Operation/", euop.ToString());
         }
         foreach(EntityProductType ept in Enum.GetValues(typeof(EntityProductType)))
         {
@@ -24,5 +26,4 @@ public class TextureManager
         // generate sprite object from texture data, offset is set to center
         return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(offset, 0.5f));
     }
-    public static Font getFont() { return font; }
 }

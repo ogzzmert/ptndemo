@@ -18,7 +18,7 @@ public class GamePanel : Panel
         rightWindow.initialize<GamePanel>(world, this);
         statsInfo.initialize<GamePanel>(world, this);
 
-        rightWindow.showCraftableInfo(EntityProductType.Barracks);
+        rightWindow.showProductInfo(EntityProductType.Barracks);
 
         endLaunch();
 
@@ -29,15 +29,24 @@ public class GamePanel : Panel
         world.handle<GameEventHandler>().call(GameEventType.onGameExit);
     }
 
-    public void showCraftableInfo(EntityProductType productType)
+    public void showProductInfo(EntityProductType productType)
     {
-        rightWindow.showCraftableInfo(productType);
+        rightWindow.showProductInfo(productType);
 
         world.handle<AudioHandler>().playSoundButtonB();
     }
-
+    public void showCraftableInfo(ProductEntity entity)
+    {
+        rightWindow.showCraftableInfo(entity);
+    }
+    public void showUnitInfo(UnitEntity entity)
+    {
+        rightWindow.showUnitInfo(entity);
+    }
+    public void clearInfo() { rightWindow.clear(); }
+    public void setSelectedPosition(Vector3Int position) { middlePad.setSelectedPosition(position); }
     public Vector3Int getSelectedPosition() { return middlePad.getSelectedPosition(); }
-    public void setHoverProduct(ProductEntity entity) { middlePad.setHover(entity.bounds, entity.tiles); }
+    public void setHoverEntity(Entity entity) { middlePad.setHover(entity.bounds, entity.tiles); }
     public void clearHover() { middlePad.clearHover(); }
     public void setSelectAction(UnityAction action) { middlePad.setSelectAction(action); }
     public void updateStatusValues() { statsInfo.updateValues(); }

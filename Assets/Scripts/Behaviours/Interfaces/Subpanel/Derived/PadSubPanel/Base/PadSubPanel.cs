@@ -82,10 +82,10 @@ public class PadSubPanel : SubPanel
 
         if (beginPosition == position && (DateTime.Now - pressTreshold).TotalMilliseconds < 250)
         {
-            selectTile(position);
+            setSelectedPosition(position);
         }
     }
-    void selectTile(Vector3Int position)
+    public void setSelectedPosition(Vector3Int position)
     {
         if (selectPosition != position)
         {
@@ -102,7 +102,20 @@ public class PadSubPanel : SubPanel
             clearHover();
         }
 
+        tryHighlightSelected();
+
         world.handle<MapHandler>().setTile(MapLayer.Select, position, select);
+    }
+    private void tryHighlightSelected()
+    {
+        Entity entity = world.handle<UserHandler>().withinEntityBounds(selectPosition);
+
+        if (entity != null)
+        {
+            if (entity.type == EntityType.Product) getParentPanel<GamePanel>().showCraftableInfo(entity as ProductEntity);
+            else if (entity.type == EntityType.Unit) getParentPanel<GamePanel>().showUnitInfo(entity as UnitEntity);
+        }
+        else getParentPanel<GamePanel>().clearInfo();
     }
     public Vector3Int getSelectedPosition() { return selectPosition; }
     public void setHover(BoundsInt bounds, TileBase[] tiles)

@@ -132,15 +132,22 @@ public class MapHandler : Handler, IHandlerGenerator
         entity.initialize(world, indexCounter);
         entity.setPosition(position);
 
-        updatePathMap(true, position, entity.bounds);
+        BoundsInt bounds = entity.bounds;
+        bounds.position = position;
 
+        updatePathMap(true, bounds);
+        
         return indexCounter;
     }
     public void disjoinEntityFromMap<T>(T entity) where T : Entity
     {
         if(entities.ContainsKey(entity.getID()))
         {
-            updatePathMap(false, entity.position, entity.bounds);
+            BoundsInt bounds = entity.bounds;
+            bounds.position = entity.position;
+
+            updatePathMap(false, bounds);
+
             entities.Remove(entity.getID());
             entity.discard();
         }
@@ -165,12 +172,9 @@ public class MapHandler : Handler, IHandlerGenerator
 
         return true;
     }
-    private void updatePathMap(bool isBlock, Vector3Int basePosition, BoundsInt baseBounds)
+    private void updatePathMap(bool isBlock, BoundsInt bounds)
     {
         // update path map data, isBlock (true) means setting tile type to none, false means returning it back to basePathMap value
-        
-        BoundsInt bounds = baseBounds;
-        bounds.position = basePosition;
         
         for(int i = bounds.position.x; i < bounds.position.x + bounds.size.x; i++)
         {

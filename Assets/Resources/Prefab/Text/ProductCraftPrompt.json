@@ -1,7 +1,7 @@
 {
     "items" : 
     [
-        "'%P' adlı yapıyı inşa etmek istediğine emin misin?",
-        "Do you accept building the structure called '%P' ?"    
+        "'%P' oluşturmak için gereken bedeli onaylıyor musun?",
+        "Do you approve the cost of creating the unit called '%P'?"
     ]
 }

@@ -15,7 +15,7 @@ public class InfoSubPanel : SubPanel
         base.initialize(world, parentPanel);
         gameBar = getInteractable<GameBar>(Panel.type.bar, "bar");
     }
-    public void showCraftableInfo(EntityProductType productType)
+    public void showProductInfo(EntityProductType productType)
     {
         // Clear previous buttons on info screen
         clear();
@@ -34,7 +34,7 @@ public class InfoSubPanel : SubPanel
             productNames[(int)productType] + "\n" + 
             "[ " + entity.bounds.size.x + " x " + entity.bounds.size.y + " ]\n\n";
         
-        for(int i = 0; i < entity.cost.Length; i++) information += resourceNames[(int)entity.cost[i].resourceType] + " x" + entity.cost[i].amount + "\n";
+        foreach(Belonging b in entity.cost) information += resourceNames[(int)b.resourceType] + " x" + b.amount + "\n";
 
         if (entity.required.Length > 0) information += "\n" + TextManager.bring(TextManager.Content.Required) + "\n\n";
 
@@ -44,19 +44,19 @@ public class InfoSubPanel : SubPanel
 
         // generate button for crafting
         
-        SubPanel craft = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
+        SubPanel produce = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
 
-        addToList(craft);
+        addToList(produce);
 
-        craft.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>("Craft"));
+        produce.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>("Craft"));
 
-        GameButton craftButton = craft.getInteractable<GameButton>(type.button, "button");
+        GameButton produceButton = produce.getInteractable<GameButton>(type.button, "button");
 
-        craftButton.setText(TextManager.bring(TextManager.Content.ProductCraft));
+        produceButton.setText(TextManager.bring(TextManager.Content.ProductProduce));
 
-        craftButton.onClick(() => tryCraftable(entity));
+        produceButton.onClick(() => tryProduct(entity));
         
-        // generate productable unit information panels
+        // generate craftable unit information panels
 
         string[] unitNames = TextManager.bring(TextManager.Content.Units).Split('*');
 
@@ -70,7 +70,7 @@ public class InfoSubPanel : SubPanel
             item.getInteractable<GameButton>(type.button, "button").setText(unitNames[(int)craftable.type]);
         }
     }
-    void tryCraftable(ProductEntity entity)
+    void tryProduct(ProductEntity entity)
     {
         // try generating the product
         // check if user has required resources
@@ -83,20 +83,13 @@ public class InfoSubPanel : SubPanel
 
             message = world.handle<InterfaceHandler>().bringPrompt
                 (
-                    TextManager.bring(TextManager.Content.ProductCraftPrompt).Replace("%P", TextManager.bring(TextManager.Content.Products).Split('*')[(int)entity.productType]), 
+                    TextManager.bring(TextManager.Content.ProductProducePrompt).Replace("%P", TextManager.bring(TextManager.Content.Products).Split('*')[(int)entity.productType]), 
                     () => hoverProduct(entity)
                 );
 
             world.handle<AudioHandler>().playSoundActionB();
         }
-        else if (message == null || !message.getPooledObject().isAwake())
-        {
-            // failure message
-
-            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(TextManager.Content.NoResources));
-
-            world.handle<AudioHandler>().playSoundButtonB();
-        }
+        else errorInfo(TextManager.Content.NoResources);
     }
     private void hoverProduct(ProductEntity entity)
     {
@@ -104,7 +97,7 @@ public class InfoSubPanel : SubPanel
 
         GamePanel gp = getParentPanel<GamePanel>();
 
-        gp.setHoverProduct(entity);
+        gp.setHoverEntity(entity);
         gp.setSelectAction(() => placeProduct(entity));
     }
     private void placeProduct(ProductEntity entity)
@@ -118,26 +111,159 @@ public class InfoSubPanel : SubPanel
 
         if (world.handle<MapHandler>().canPlaceEntity(entity.ground, bounds))
         {
-            ProductEntity newProduct = world.handle<UserHandler>().productCraft(entity, bounds.position);
+            world.handle<UserHandler>().productCraft(entity, bounds.position);
 
-            if (newProduct != null)
-            {
-                world.handle<MapHandler>().setTiles(MapLayer.Settlement, bounds, entity.tiles);
-
-                getParentPanel<GamePanel>().updateStatusValues();
-            }
+            getParentPanel<GamePanel>().updateStatusValues();
         }
-        else
-        {
-            // throw an error for ineligible positioning
-            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(TextManager.Content.IneligiblePosition));
-        }
+        else errorInfo(TextManager.Content.IneligiblePosition);
         
+    }
+
+    public void showCraftableInfo(ProductEntity entity)
+    {
+        // show info of user's selected product on the map
+        clear();
+
+        // set info panel's main icon to product image
+        setMainImage(entity.productType.ToString());
+
+        // set information text for the product
+        string[] productNames = TextManager.bring(TextManager.Content.Products).Split('*');
+        string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
+
+        string information = 
+            productNames[(int)entity.productType] + "\n" + 
+            TextManager.bring(TextManager.Content.Durability) + entity.durability;
+
+        gameBar.setText(information);
+        
+        // generate productable unit buttons
+
+        string[] unitNames = TextManager.bring(TextManager.Content.Units).Split('*');
+
+        foreach(ProductEntity.Craftable craftable in entity.GetCraftables())
+        {
+            SubPanel item = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
+
+            addToList(item);
+
+            item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>(craftable.type.ToString()));
+
+            item.getInteractable<GameButton>(type.button, "button").setText
+                (
+                    TextManager.bring(TextManager.Content.ProductCraft) + "\n" +
+                    unitNames[(int)craftable.type]
+                );
+
+            item.getInteractable<GameButton>(type.button, "button").onClick(() => tryCraftable(entity, craftable));
+        }
+    }
+
+    private void tryCraftable(ProductEntity entity, ProductEntity.Craftable craftable)
+    {
+        if (world.handle<UserHandler>().checkCraftableRequired(craftable))
+        {
+            if(message != null && message.getPooledObject().isAwake()) message.getPooledObject().sendback();
+
+            string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
+
+            string unitCost = "\n\n";
+            foreach(Belonging b in craftable.required) unitCost += resourceNames[(int)b.resourceType] + " x" + b.amount + "\n";
+
+            message = world.handle<InterfaceHandler>().bringPrompt
+                (
+                    TextManager.bring(TextManager.Content.ProductCraftPrompt).Replace("%P", TextManager.bring(TextManager.Content.Units).Split('*')[(int)craftable.type]) + unitCost, 
+                    () => placeCraftable(entity, craftable)
+                );
+
+            world.handle<AudioHandler>().playSoundActionA();
+        }
+        else errorInfo(TextManager.Content.NoResources);
+    }
+
+    private void placeCraftable(ProductEntity entity, ProductEntity.Craftable craftable)
+    {
+        // try to generate selected unit from the built product
+        if (entity != null && entity.durability > 0 && world.handle<UserHandler>().checkCraftableRequired(craftable))
+        {
+            UnitEntity unitEntity = EntityManager.GetUnit(craftable.type);
+
+            Vector3Int[] positions = entity.GetSpawnPositions();
+            
+            bool spawned = false;
+
+            foreach(Vector3Int p in positions)
+            {
+                Vector3Int position = p + entity.position;
+
+                BoundsInt bounds = unitEntity.bounds;
+                bounds.position = position;
+
+                if (world.handle<MapHandler>().canPlaceEntity(unitEntity.ground, bounds))
+                {
+                    // position found, can spawn the unit
+                    
+                    world.handle<UserHandler>().unitCraft(craftable, unitEntity, position);
+
+                    getParentPanel<GamePanel>().updateStatusValues();
+
+                    getParentPanel<GamePanel>().setSelectedPosition(position);
+
+                    world.handle<AudioHandler>().playSoundButtonA();
+
+                    spawned = true;
+
+                    break;
+                }
+            }
+
+            if (!spawned) errorInfo(TextManager.Content.IneligiblePosition, true);
+        }
+        else errorInfo(TextManager.Content.NoResources);
+    }
+
+    public void showUnitInfo(UnitEntity entity)
+    {
+        // show info of user's selected unit on the map
+        clear();
+
+        // set info panel's main icon to unit image
+        setMainImage(entity.unitType.ToString());
+
+        // set information text for the unit
+        string[] unitNames = TextManager.bring(TextManager.Content.Units).Split('*');
+        string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
+        string[] operationNames = TextManager.bring(TextManager.Content.Operations).Split('*');
+
+        string information = 
+            unitNames[(int)entity.unitType] + "\n" + 
+            TextManager.bring(TextManager.Content.Durability) + entity.durability + "\n" +
+            TextManager.bring(TextManager.Content.Power) + entity.cost[0].amount;
+
+        gameBar.setText(information);
+        
+        // generate unit operation buttons
+
+        foreach(UnitEntity.Operation operation in entity.operation)
+        {
+            SubPanel item = world.handle<InterfaceHandler>().bringSubPanel<SubPanel, InfoSubPanel>(SubPanelType.ListItem, this);
+
+            addToList(item);
+
+            item.getInteractable<GameBar>(type.bar, "bar").setSprite(ResourceManager.loadFromCache<Sprite>(operation.type.ToString()));
+
+            item.getInteractable<GameButton>(type.button, "button").setText
+                (
+                    operationNames[(int)operation.type]
+                );
+
+            // item.getInteractable<GameButton>(type.button, "button").onClick(() => tryCraftable(entity, craftable));
+        }
     }
     private void setMainImage(string imageName)
     {
         // set info panel's main sprite
-
+        gameBar.enable(true);
         gameBar.setSprite(ResourceManager.loadFromCache<Sprite>(imageName));
     }
     private void addToList(SubPanel subPanel)
@@ -157,12 +283,24 @@ public class InfoSubPanel : SubPanel
          
         list.Add(subPanel);
     }
-    private void clear()
+    public void clear()
     {
         // clear info panel buttons and the containing list
-
+        gameBar.enable(false);
         foreach(SubPanel sp in list) sp.discard();
         list.Clear();
         getParentPanel<GamePanel>().clearHover();
+    }
+    private void errorInfo(TextManager.Content content, bool force = false)
+    {
+        if (message == null || !message.getPooledObject().isAwake() || force)
+        {
+            // failure message
+            if (force && message != null) message.getPooledObject().sendback();
+
+            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(content));
+
+            world.handle<AudioHandler>().playSoundButtonB();
+        }
     }
 }

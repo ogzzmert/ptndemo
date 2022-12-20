@@ -175,14 +175,16 @@ public class InfoSubPanel : SubPanel
 
     private void tryCraftable(ProductEntity entity, ProductEntity.Craftable craftable)
     {
+        // check if user meets requirements for crafting the given craftable of the product 
+        
+        string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
+
+        string unitCost = "\n\n";
+        foreach(Belonging b in craftable.required) unitCost += resourceNames[(int)b.resourceType] + " x" + b.amount + "\n";
+        
         if (world.handle<UserHandler>().checkCraftableRequired(craftable))
         {
             if(message != null && message.getPooledObject().isAwake()) message.getPooledObject().sendback();
-
-            string[] resourceNames = TextManager.bring(TextManager.Content.Currency).Split('*');
-
-            string unitCost = "\n\n";
-            foreach(Belonging b in craftable.required) unitCost += resourceNames[(int)b.resourceType] + " x" + b.amount + "\n";
 
             message = world.handle<InterfaceHandler>().bringPrompt
                 (
@@ -192,7 +194,7 @@ public class InfoSubPanel : SubPanel
 
             world.handle<AudioHandler>().playSoundActionA();
         }
-        else errorInfo(TextManager.Content.NoResources);
+        else errorInfo(TextManager.Content.NoResources, false, unitCost);
     }
 
     private void placeCraftable(ProductEntity entity, ProductEntity.Craftable craftable)
@@ -327,6 +329,8 @@ public class InfoSubPanel : SubPanel
                 if (world.handle<UserHandler>().checkOperationRequired(operation))
                 {
                     world.handle<UserHandler>().operationCast(entity, operation, nodes);
+
+                    getParentPanel<GamePanel>().updateStatusValues();
                 }
                 else errorInfo(TextManager.Content.NoResources);
             }
@@ -366,14 +370,14 @@ public class InfoSubPanel : SubPanel
         list.Clear();
         getParentPanel<GamePanel>().clearHover();
     }
-    private void errorInfo(TextManager.Content content, bool force = false)
+    private void errorInfo(TextManager.Content content, bool force = false, string suffix = "")
     {
         if (message == null || !message.getPooledObject().isAwake() || force)
         {
             // failure message
             if (force && message != null) message.getPooledObject().sendback();
 
-            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(content));
+            message = world.handle<InterfaceHandler>().bringMessage(TextManager.bring(content) + suffix);
 
             world.handle<AudioHandler>().playSoundButtonB();
         }

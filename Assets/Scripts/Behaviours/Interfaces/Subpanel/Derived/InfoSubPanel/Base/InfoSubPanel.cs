@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class InfoSubPanel : SubPanel
 {
@@ -111,7 +112,7 @@ public class InfoSubPanel : SubPanel
 
         if (world.handle<MapHandler>().canPlaceEntity(entity.ground, bounds))
         {
-            world.handle<UserHandler>().productCraft(entity, bounds.position);
+            world.handle<UserHandler>().productCast(entity, bounds.position);
 
             getParentPanel<GamePanel>().updateStatusValues();
         }
@@ -216,7 +217,7 @@ public class InfoSubPanel : SubPanel
                 {
                     // position found, can spawn the unit
                     
-                    world.handle<UserHandler>().unitCraft(craftable, unitEntity, position);
+                    world.handle<UserHandler>().unitCast(craftable, unitEntity, position);
 
                     getParentPanel<GamePanel>().updateStatusValues();
 
@@ -276,7 +277,7 @@ public class InfoSubPanel : SubPanel
     void tryUnitOperation(UnitEntity entity, UnitEntity.Operation operation)
     {
         // prompt operation type and set its function
-        if (entity != null && entity.durability > 0)
+        if (entity != null && entity.durability > 0 && world.handle<UserHandler>().checkOperationRequired(operation))
         {
             if(message != null && message.getPooledObject().isAwake()) message.getPooledObject().sendback();
 
@@ -299,17 +300,40 @@ public class InfoSubPanel : SubPanel
     }
     void castOperation(UnitEntity entity, UnitEntity.Operation operation)
     {
-        if (operation.type == EntityUnitOperationType.Move)
+        // try conducting the selected operation
+
+        if (operation.type == EntityUnitOperationType.Move || operation.type == EntityUnitOperationType.Charge)
         {
             getParentPanel<GamePanel>().setHoverEntity(EntityManager.GetUnit(entity.unitType));
+
             getParentPanel<GamePanel>().setSelectAction
                 (
-                    (Vector3Int position) => 
-                        {
-                            // fill for movement command
-                        }
+                    (Vector3Int position) => castOperationMove(entity, operation, position)
                 );
         }
+    }
+    private void castOperationMove(UnitEntity entity, UnitEntity.Operation operation, Vector3Int position)
+    {
+        // callback for move operation, try conducting move
+        BoundsInt bounds = entity.bounds;
+        bounds.position = position;
+
+        if (world.handle<MapHandler>().canPlaceEntity(entity.ground, bounds))
+        {
+            Stack<Node> nodes = world.handle<MapHandler>().canMoveUnit(entity, position);
+
+            if (nodes != null)
+            {
+                if (world.handle<UserHandler>().checkOperationRequired(operation))
+                {
+                    world.handle<UserHandler>().operationCast(entity, operation, nodes);
+                }
+                else errorInfo(TextManager.Content.NoResources);
+            }
+            else errorInfo(TextManager.Content.TooFar);
+        }
+        else errorInfo(TextManager.Content.NoPath);
+     
     }
     private void setMainImage(string imageName)
     {

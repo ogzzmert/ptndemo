@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Pathfinding;
 
 public class MapHandler : Handler, IHandlerGenerator
 {
@@ -21,8 +22,11 @@ public class MapHandler : Handler, IHandlerGenerator
     Dictionary<MapLayer, Tilemap> layers = new Dictionary<MapLayer, Tilemap>();
 
     Dictionary<string, MapTileMatch> mapTileMatches = new Dictionary<string, MapTileMatch>();
-    Dictionary<Vector3Int, MapTile> basePathMap = new Dictionary<Vector3Int, MapTile> ();
-    Dictionary<Vector3Int, MapTile> pathMap = new Dictionary<Vector3Int, MapTile> ();
+    Dictionary<Vector3Int, MapTile> basePathMap = new Dictionary<Vector3Int, MapTile>();
+    Dictionary<Vector3Int, MapTile> pathMap = new Dictionary<Vector3Int, MapTile>();
+
+    Astar pathfinder = new Astar();
+    List<List<Node>> nodes = new List<List<Node>>();
     
     int indexCounter = 0;
     Dictionary<int, Entity> entities = new Dictionary<int, Entity>();
@@ -65,6 +69,7 @@ public class MapHandler : Handler, IHandlerGenerator
         entities.Clear();
         basePathMap.Clear();
         pathMap.Clear();
+        nodes.Clear();
         indexCounter = 0;
     }
     private void load(string mapname)
@@ -115,6 +120,10 @@ public class MapHandler : Handler, IHandlerGenerator
     public void setTiles(MapLayer layer, BoundsInt bounds, TileBase[] tiles)
     {
         layers[layer].SetTilesBlock(bounds, tiles);
+    }
+    public void clearTiles(MapLayer layer, BoundsInt bounds)
+    {
+        layers[layer].SetTile(bounds.position, null); // delete later
     }
     public void clearTilemap(MapLayer layer)
     {
@@ -172,10 +181,16 @@ public class MapHandler : Handler, IHandlerGenerator
 
         return true;
     }
+    public Stack<Node> canMoveUnit(UnitEntity entity, Vector3Int position)
+    {
+        return pathfinder.run(nodes, entity, position, layers[MapLayer.Ground].cellBounds.xMin, layers[MapLayer.Ground].cellBounds.yMin);
+    }
     private void updatePathMap(bool isBlock, BoundsInt bounds)
     {
         // update path map data, isBlock (true) means setting tile type to none, false means returning it back to basePathMap value
-        
+        int xMin = layers[MapLayer.Ground].cellBounds.xMin;
+        int yMin = layers[MapLayer.Ground].cellBounds.yMin;
+
         for(int i = bounds.position.x; i < bounds.position.x + bounds.size.x; i++)
         {
             for(int j = bounds.position.y; j < bounds.position.y + bounds.size.y; j++)
@@ -183,11 +198,15 @@ public class MapHandler : Handler, IHandlerGenerator
                 Vector3Int position = new Vector3Int(i, j, 0);
                 
                 pathMap[position] = isBlock ? MapTile.None : basePathMap[position];
+                nodes[i - xMin][j - yMin].update(pathMap[position]);
             }
         }
     }
     void setBaseMap(Tilemap tileMap) 
     {
+        int rows = tileMap.cellBounds.xMax - tileMap.cellBounds.xMin;
+        int cols = tileMap.cellBounds.yMax - tileMap.cellBounds.yMin;
+
         for (int n = tileMap.cellBounds.xMin; n < tileMap.cellBounds.xMax; n++)
         {
             for (int p = tileMap.cellBounds.yMin; p < tileMap.cellBounds.yMax; p++)
@@ -201,5 +220,17 @@ public class MapHandler : Handler, IHandlerGenerator
             }
         }
         foreach(var bpm in basePathMap) pathMap.Add(bpm.Key, bpm.Value);
+
+        for(int x = 0; x < rows; x++)
+        {
+            nodes.Add(new List<Node>());
+
+            for(int y = 0; y < cols; y++)
+            {   
+                Vector3Int position = new Vector3Int(x + tileMap.cellBounds.xMin, y + tileMap.cellBounds.yMin, 0);
+
+                nodes[x].Add(new Node(position, pathMap[position]));
+            }
+        }
     }
 }

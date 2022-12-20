@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
 using System.Linq;
+using Pathfinding;
 
 public class UserHandler : Handler
 {
@@ -28,6 +29,10 @@ public class UserHandler : Handler
     public bool checkCraftableRequired(ProductEntity.Craftable craftable)
     {
         return !canConsumeCost(craftable.required) ? false : true;
+    } 
+    public bool checkOperationRequired(UnitEntity.Operation operation)
+    {
+        return !canConsumeCost(operation.required) ? false : true;
     } 
     private bool doesMatchRequirements(EntityProductType[] productTypes)
     {
@@ -60,6 +65,16 @@ public class UserHandler : Handler
         }
         else return false;
     }
+    private bool consumeOperationCost(UnitEntity.Operation operation)
+    {
+        if (checkOperationRequired(operation))
+        {
+            consumeCost(operation.required);
+
+            return true;
+        }
+        else return false;
+    }
     private bool canConsumeCost(Belonging[] cost)
     {
         foreach(Belonging b in cost)
@@ -75,7 +90,7 @@ public class UserHandler : Handler
     {
         foreach(Belonging b in cost) resource[b.resourceType] -= b.amount;
     }
-    public void productCraft(ProductEntity entity, Vector3Int position)
+    public void productCast(ProductEntity entity, Vector3Int position)
     {
         if (consumeProductCost(entity))
         {
@@ -84,13 +99,29 @@ public class UserHandler : Handler
             products.Add(newProduct.getID(), newProduct);
         }
     }
-    public void unitCraft(ProductEntity.Craftable craftable, UnitEntity entity, Vector3Int position)
+    public void unitCast(ProductEntity.Craftable craftable, UnitEntity entity, Vector3Int position)
     {
         if (consumeCraftableCost(craftable))
         {
             UnitEntity newUnit = craft(entity, position);
 
             units.Add(newUnit.getID(), newUnit);
+        }
+    }
+    public void operationCast(UnitEntity entity, UnitEntity.Operation operation, Stack<Node> nodes)
+    {
+        if (consumeOperationCost(operation) && units.ContainsKey(entity.getID()))
+        {
+            units[entity.getID()].tryOperation(operation.type, nodes);
+        }
+    }
+    public void unitDiscard(UnitEntity entity)
+    {
+        if (units.ContainsKey(entity.getID()))
+        {
+            units.Remove(entity.getID());
+            disCraft(entity);
+            entity.discard();
         }
     }
     private T craft<T>(T entity, Vector3Int position) where T : Entity
@@ -105,6 +136,15 @@ public class UserHandler : Handler
         world.handle<MapHandler>().setTiles(MapLayer.Settlement, bounds, entity.tiles);
         
         return newEntity;
+    }
+    private void disCraft<T>(T entity) where T : Entity
+    {
+        world.handle<MapHandler>().disjoinEntityFromMap(entity);
+
+        BoundsInt bounds = entity.bounds;
+        bounds.position = entity.position;
+
+        world.handle<MapHandler>().clearTiles(MapLayer.Settlement, entity.bounds);
     }
     public bool checkUnitRequired(UnitEntity entity)
     {

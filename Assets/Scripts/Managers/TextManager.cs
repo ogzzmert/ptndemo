@@ -62,7 +62,9 @@ public class TextManager
         ProductCraft = 22,
         ProductCraftPrompt = 23,
         Operations = 24,
-        Power = 25
+        Power = 25,
+        TooFar = 26,
+        NoPath = 27
     }
     public enum Language
     {

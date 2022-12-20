@@ -1,7 +1,7 @@
+// Mert Oguz - 2022 demo project
+
 using UnityEngine;
 using UnityEngine.Events;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 

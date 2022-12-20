@@ -1,3 +1,5 @@
+// Mert Oguz - 2022 demo project
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

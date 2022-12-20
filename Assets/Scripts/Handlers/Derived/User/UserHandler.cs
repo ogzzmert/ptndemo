@@ -1,7 +1,7 @@
-using System.Collections;
+// Mert Oguz - 2022 demo project
+
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System;
 using System.Linq;
 using Pathfinding;

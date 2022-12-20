@@ -1,5 +1,5 @@
-using System;
-using System.Collections.Generic;
+// Mert Oguz - 2022 demo project
+
 using UnityEngine;
 public class Pool
 {

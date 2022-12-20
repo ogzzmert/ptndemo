@@ -277,7 +277,7 @@ public class InfoSubPanel : SubPanel
     void tryUnitOperation(UnitEntity entity, UnitEntity.Operation operation)
     {
         // prompt operation type and set its function
-        if (entity != null && entity.durability > 0 && world.handle<UserHandler>().checkOperationRequired(operation))
+        if (entity != null && entity.durability > 0 && !entity.isBusy && world.handle<UserHandler>().checkOperationRequired(operation))
         {
             if(message != null && message.getPooledObject().isAwake()) message.getPooledObject().sendback();
 

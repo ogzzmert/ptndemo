@@ -244,3 +244,4 @@ MonoBehaviour:
     <required>k__BackingField:
     - resourceType: 0
       amount: -25
+  <moveLimit>k__BackingField: 25

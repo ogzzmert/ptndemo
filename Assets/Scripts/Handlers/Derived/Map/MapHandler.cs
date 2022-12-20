@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Pathfinding;
 
-public class MapHandler : Handler, IHandlerGenerator
+public class MapHandler : Handler, IHandlerGenerator, IHandlerTicker
 {
     [field: SerializeField] private Grid grid;
     [field: SerializeField] private MapTileMatch[] match;
@@ -72,6 +72,13 @@ public class MapHandler : Handler, IHandlerGenerator
         nodes.Clear();
         indexCounter = 0;
     }
+    public void Tick(int frequency)
+    {
+        foreach(Entity entity in entities.Values)
+        {
+            entity.tryJob(frequency);
+        }
+    }
     private void load(string mapname)
     {
         foreach(MapLayer layer in Enum.GetValues(typeof(MapLayer)))
@@ -123,7 +130,7 @@ public class MapHandler : Handler, IHandlerGenerator
     }
     public void clearTiles(MapLayer layer, BoundsInt bounds)
     {
-        layers[layer].SetTile(bounds.position, null); // delete later
+        layers[layer].SetTilesBlock(bounds, new TileBase[bounds.size.x * bounds.size.y]);
     }
     public void clearTilemap(MapLayer layer)
     {
@@ -159,6 +166,21 @@ public class MapHandler : Handler, IHandlerGenerator
 
             entities.Remove(entity.getID());
             entity.discard();
+        }
+    }
+    public void replaceEntityOnMap<T>(T entity, Vector3Int position) where T : Entity
+    {
+        if(entities.ContainsKey(entity.getID()))
+        {
+            BoundsInt bounds = entity.bounds;
+
+            bounds.position = entity.position;
+            updatePathMap(false, bounds);
+
+            bounds.position = position;
+            updatePathMap(true, bounds);
+
+            entity.setPosition(position);
         }
     }
     public bool canPlaceEntity(MapTile[] ground, BoundsInt bounds)

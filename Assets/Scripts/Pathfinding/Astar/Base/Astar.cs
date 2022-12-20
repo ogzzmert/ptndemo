@@ -47,8 +47,6 @@ namespace Pathfinding
 
         public bool canWalk(MapTile[] ground)
         {
-            Debug.Log(position);
-            
             return ground.Contains(tile);
         }
 

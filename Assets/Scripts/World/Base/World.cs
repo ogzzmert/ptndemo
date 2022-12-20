@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour 
 {
+    [field: SerializeField] private float tickDelta;
     Dictionary<Type, Handler> handlers = new Dictionary<Type, Handler>();
 
     private void Awake() 
@@ -18,7 +19,11 @@ public class World : MonoBehaviour
     }
     private void Start() 
     {
-        handle<GameEventHandler>().call(GameEventType.onStart);   
+        tickDelta = tickDelta <= 0.0015f ? 0.015f : tickDelta;
+
+        StartCoroutine(TickLoop());
+
+        handle<GameEventHandler>().call(GameEventType.onStart);
     }
     public void launch()
     {
@@ -37,6 +42,19 @@ public class World : MonoBehaviour
 
         foreach(Handler handler in handlers.Values) if (handler is IHandlerGenerator) (handler as IHandlerGenerator).generate(worldType, worldIndex);
 
+    }
+    IEnumerator TickLoop()
+    {
+        int frequency = 0;
+
+        while(true)
+        {
+            foreach(Handler handler in handlers.Values) if (handler is IHandlerTicker) (handler as IHandlerTicker).Tick(frequency);
+
+            yield return new WaitForSeconds(tickDelta);
+
+            frequency = frequency < 100 ? frequency + 1 : 0;
+        }
     }
     public bool isReady() { return true; }
     public GameObject spawn(GameObject g) { return Instantiate(g); }

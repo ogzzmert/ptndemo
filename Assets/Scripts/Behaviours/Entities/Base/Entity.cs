@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour
     public string lastActive { get; private set; } = null;
     public bool isCore {get; private set;} = false;
     public bool isActive { get; private set; } = false;
-    public bool isBuilt { get; private set; } = false;
+    public bool isBusy { get; private set; } = false;
     public Vector3Int position { get; private set; }
 
     public virtual void initialize(World world, int id)
@@ -38,7 +38,7 @@ public class Entity : MonoBehaviour
         // override for self deletion
         removeAllLabels();
         setActive(false);
-        setBuild(false);
+        setBusy(false);
         Destroy(gameObject);
     }
     public virtual string calculateDamage(string[] data, bool isSkill)
@@ -114,9 +114,9 @@ public class Entity : MonoBehaviour
     {
         isActive = condition;
     }
-    public void setBuild(bool condition)
+    protected void setBusy(bool condition)
     {
-        isBuilt = condition;
+        isBusy = condition;
     }
     public virtual void setPosition(Vector3Int position)
     {
@@ -128,10 +128,13 @@ public class Entity : MonoBehaviour
     {
         return Calculator.getDistance(this.position, position);
     }
-    public virtual bool isInvisible()
+    public void tryJob(int frequency)
     {
-        // override for invisiblity check
-        return false;
+        if (isBusy) doJob(frequency);
+    }
+    protected virtual void doJob(int frequency)
+    {
+        // override for operations or jobs
     }
     public void setTiles(Tilemap map)
     {

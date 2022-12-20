@@ -17,17 +17,49 @@ public class UnitEntity : Entity
         [field: SerializeField] public EntityUnitOperationType type { get; private set; }
         [field: SerializeField] public Belonging[] required { get; private set; }
     }
+
+    public class Job
+    {
+        public EntityUnitOperationType type;
+        public Stack<Node> path;
+        public int tick;
+    }
+
+    Job job;
     public override void initialize(World world, int id)
     {
         base.initialize(world, id);
     }
     public void tryOperation(EntityUnitOperationType operationType, Stack<Node> nodes)
     {
-        if (operationType == EntityUnitOperationType.Move) StartCoroutine(moveIterator(nodes));
-        else if (operationType == EntityUnitOperationType.Charge) StartCoroutine(moveIterator(nodes, 2f));
-        else if (operationType == EntityUnitOperationType.Disband) world.handle<UserHandler>().unitDiscard(this);
+        int frequencyTick = 1;
+
+        if (operationType == EntityUnitOperationType.Move) frequencyTick = 2;
+
+        job = new Job() { type = operationType, path = nodes, tick = frequencyTick };
+
+        setBusy(true);
     }
-    IEnumerator moveIterator(Stack<Node> nodes, float speed = 1f)
+    protected override void doJob(int frequency)
+    {
+        if (job != null)
+        {
+            if (job.type == EntityUnitOperationType.Move || job.type == EntityUnitOperationType.Charge)
+            {
+                if (job.path.Count > 0) 
+                { 
+                    if (frequency % job.tick == 0) move(job.path.Pop()); 
+                }
+                else setBusy(false);
+            }
+            else if (job.type == EntityUnitOperationType.Disband) 
+            { 
+                world.handle<UserHandler>().unitDiscard(this);
+                setBusy(false);
+            }
+        }
+    }
+    void move(Node node)
     {
         MapHandler map = world.handle<MapHandler>();
 
@@ -35,16 +67,13 @@ public class UnitEntity : Entity
         b.position = this.position;
 
         TileBase[] t = EntityManager.GetUnit(unitType).tiles;
+        
+        map.clearTiles(MapLayer.Settlement, b);
 
-        while(nodes.Count > 0)
-        {
-            map.clearTiles(MapLayer.Settlement, b);
+        b.position = node.position;
 
-            b.position = nodes.Pop().position;
+        map.setTiles(MapLayer.Settlement, b, t);
 
-            map.setTiles(MapLayer.Settlement, b, t);
-
-            yield return new WaitForSeconds(1f / speed);
-        }
+        map.replaceEntityOnMap(this, b.position);
     }
 }

@@ -11,7 +11,6 @@ namespace Pathfinding
 {
     public class Node
     {
-        // Change this depending on what the desired size is for each element in the grid
         public static int NODE_SIZE = 32;
         public Node parent;
         public Vector3Int position;
@@ -94,15 +93,13 @@ namespace Pathfinding
             List<Node> ClosedList = new List<Node>();
             List<Node> adjacencies;
             Node current = start;
-           Debug.Log("start");
-            // add start node to Open List
+
             OpenList.Insert(start, start.F);
 
             int count = 0;
 
             while(!OpenList.isEmpty() && !ClosedList.Exists(x => x.position == end.position) && count < entity.moveLimit)
             {
-                Debug.Log("phase");
                 current = OpenList.Pop();
                 ClosedList.Add(current);
                 adjacencies = GetAdjacentNodes(current);
@@ -131,13 +128,11 @@ namespace Pathfinding
                 }
             }
             
-            // construct path, if end was not closed return null
             if(!ClosedList.Exists(x => x.position == end.position))
             {
                 return null;
             }
 
-            // if all good, return path
             Node temp = ClosedList[ClosedList.IndexOf(current)];
             if (temp == null) return null;
             do
